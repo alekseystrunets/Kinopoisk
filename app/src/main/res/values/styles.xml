@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <resources>
+        <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+            <!-- Убираем фон стартового экрана -->
+            <item name="android:windowBackground">@color/black</item>
+            <!-- Убираем заголовок -->
+            <item name="android:windowNoTitle">true</item>
+            <!-- Полноэкранный режим -->
+            <item name="android:windowFullscreen">false</item>
+        </style>
+    </resources>
