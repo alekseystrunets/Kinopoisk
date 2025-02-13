@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="30sp"
-        android:text="Кино"
+        android:text="@string/movies"
         app:layout_constraintStart_toEndOf="@+id/icon_kinopoisk"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="15dp"
@@ -44,10 +44,11 @@
 
 
         <ImageButton
-            android:contentDescription="Home"
+            android:contentDescription="@string/home"
             android:id="@+id/button_home"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:soundEffectsEnabled="false"
             android:src="@drawable/home"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -56,10 +57,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:contentDescription="Account"
+            android:contentDescription="@string/account"
             android:id="@+id/button_account"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:soundEffectsEnabled="false"
             android:src="@drawable/account"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -69,10 +71,11 @@
             android:layout_marginHorizontal="30dp"/>
 
         <ImageButton
-            android:contentDescription="Favorites"
+            android:contentDescription="@string/favorite"
             android:id="@+id/button_settings"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:soundEffectsEnabled="false"
             android:src="@drawable/star"
             app:layout_constraintBottom_toBottomOf="parent"

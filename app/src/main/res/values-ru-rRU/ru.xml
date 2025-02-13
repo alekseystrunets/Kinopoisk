@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Кинопоиск</string>
+    <string name="login_edit_text_email">Введите почту</string>
+    <string name="login_edit_text_login">Введите логин</string>
+    <string name="login_edit_text_password">Введите пароль</string>
+    <string name="login_button_enter">Вход</string>
+    <string name="login_button_registration">Регистрация</string>
+    <string name="movies">Кино</string>
+    <string name="or">или</string>
+    <string name="favorites">Избранные</string>
+    <string name="home">Дом</string>
+    <string name="account">Аккаунт</string>
+    <string name="favorite">Избранный</string>
+    <string name="about_the_application">О приложении</string>
+    <string name="description">Добро пожаловать в Kinopoisk — приложение для подбора фильмов,
+         созданное с любовью к кино и технологиям! Это мой пет-проект,
+          который объединяет в себе удобство, современный дизайн и мощные
+           инструменты для поиска идеального фильма на вечер.</string>
+</resources>
