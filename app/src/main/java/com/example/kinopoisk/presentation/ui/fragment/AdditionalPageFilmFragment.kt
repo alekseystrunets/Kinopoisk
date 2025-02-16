@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.kinopoisk.R
 
-class FilmPageFragment : Fragment() {
-
+class AdditionalPageFilmFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +18,8 @@ class FilmPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_film_page, container, false)
+
+        return inflater.inflate(R.layout.fragment_additional_page_film, container, false)
     }
 
-    }
+}
