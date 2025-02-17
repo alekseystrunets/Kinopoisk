@@ -17,9 +17,9 @@ class FilmPageFragment : Fragment() {
     private  var adapter: FilmPageFragmentAdapter? = null
 
     private val listOfActors = mutableListOf(
-        Actors("Actor 1", 1),
-        Actors("Actor 2", 1),
-        Actors("Actor 3", 1)
+        Actors("Actor 1", ""),
+        Actors("Actor 2", ""),
+        Actors("Actor 3", "")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

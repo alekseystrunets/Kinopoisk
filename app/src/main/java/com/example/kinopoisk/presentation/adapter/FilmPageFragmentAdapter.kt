@@ -40,3 +40,4 @@ class FilmPageFragmentAdapter(
 
     override fun getItemCount(): Int = list.size
 }
+
