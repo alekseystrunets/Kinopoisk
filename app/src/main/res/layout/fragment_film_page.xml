@@ -159,14 +159,14 @@
             android:soundEffectsEnabled="false"
             android:src="@drawable/account"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_settings"
+            app:layout_constraintEnd_toStartOf="@+id/button_favorites"
             app:layout_constraintStart_toEndOf="@+id/button_home"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginHorizontal="30dp"/>
 
         <ImageButton
             android:contentDescription="@string/favorite"
-            android:id="@+id/button_settings"
+            android:id="@+id/button_favorites"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:background="?attr/selectableItemBackgroundBorderless"

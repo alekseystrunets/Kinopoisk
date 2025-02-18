@@ -70,7 +70,7 @@ class LoginFragment : Fragment() {
         _binding = null
     }
 
-    fun toNextScreen() {
+    private fun toNextScreen() {
         val secondFragment = HomeFragment()
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, secondFragment)
