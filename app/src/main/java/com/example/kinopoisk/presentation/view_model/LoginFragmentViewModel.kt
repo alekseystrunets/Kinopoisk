@@ -24,7 +24,7 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
     private val LOGIN_PATTERN = Pattern.compile("^[A-Za-z0-9_]{3,20}\$")
     private val PASSWORD_PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}\$")
 
-    fun validateInputs(email: String, login: String, password: String) {
+    fun validateInputs(email: String, login: String, password: String, validateLogin: Boolean = true) {
         val errors = Bundle()
 
         // Валидация email
@@ -34,11 +34,13 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
             errors.putString("emailError", "Некорректный формат email")
         }
 
-        // Валидация логина
-        if (login.isEmpty()) {
-            errors.putString("loginError", "Логин не может быть пустым")
-        } else if (!LOGIN_PATTERN.matcher(login).matches()) {
-            errors.putString("loginError", "Логин должен содержать только буквы, цифры и символы подчеркивания (от 3 до 20 символов)")
+        // Валидация логина (если требуется)
+        if (validateLogin) {
+            if (login.isEmpty()) {
+                errors.putString("loginError", "Логин не может быть пустым")
+            } else if (!LOGIN_PATTERN.matcher(login).matches()) {
+                errors.putString("loginError", "Логин должен содержать только буквы, цифры и символы подчеркивания (от 3 до 20 символов)")
+            }
         }
 
         // Валидация пароля

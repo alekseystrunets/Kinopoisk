@@ -48,7 +48,8 @@ class LoginFragment : Fragment() {
             val login = binding.regLoginEditText.text.toString()
             val password = binding.regPasswordEditText.text.toString()
 
-            viewModel.validateInputs(email, login, password)
+            // Валидируем поля перед регистрацией (логин проверяем)
+            viewModel.validateInputs(email, login, password, validateLogin = true)
             if (viewModel.publicLiveDataForFields.value == null) {
                 viewModel.registerUser(email, login, password,
                     onSuccess = { isFirstLogin ->
@@ -72,8 +73,8 @@ class LoginFragment : Fragment() {
             val email = binding.regEmailEditText.text.toString()
             val password = binding.regPasswordEditText.text.toString()
 
-            // Валидируем поля перед входом
-            viewModel.validateInputs(email, "", password) // Логин не требуется для входа
+            // Валидируем поля перед входом (логин не проверяем)
+            viewModel.validateInputs(email, "", password, validateLogin = false)
             if (viewModel.publicLiveDataForFields.value == null) {
                 viewModel.loginUser(email, password,
                     onSuccess = { isFirstLogin ->

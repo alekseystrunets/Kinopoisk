@@ -24,4 +24,12 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun isFirstLogin(email: String): Boolean {
         return userDao.getUserByEmail(email) == null
     }
+
+    suspend fun getUserByEmail(email: String): User? {
+        return userDao.getUserByEmail(email)
+    }
+
+    suspend fun getUserById(id: Int): User? {
+        return userDao.getUserById(id)
+    }
 }
