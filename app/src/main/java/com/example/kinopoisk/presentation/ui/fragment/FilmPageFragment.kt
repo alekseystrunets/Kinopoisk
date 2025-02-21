@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kinopoisk.R
-import com.example.kinopoisk.databinding.FragmentAdditionalPageFilmBinding
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
 import com.example.kinopoisk.presentation.Actors
 import com.example.kinopoisk.presentation.adapter.FilmPageFragmentAdapter
@@ -22,9 +21,9 @@ class FilmPageFragment : Fragment() {
     private  var adapter: FilmPageFragmentAdapter? = null
 
     private val listOfActors = mutableListOf(
-        Actors("Actor 1", ""),
-        Actors("Actor 2", ""),
-        Actors("Actor 3", "")
+        Actors("Actor 1", "12"),
+        Actors("Actor 2", "12"),
+        Actors("Actor 3", "12")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

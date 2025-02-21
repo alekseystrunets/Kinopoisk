@@ -1,26 +1,21 @@
 package com.example.kinopoisk.presentation.ui.fragment
 
+import LoginFragmentViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentLoginBinding
-import com.example.kinopoisk.presentation.view_model.LoginFragmentViewModel
 
 class LoginFragment : Fragment() {
 
-
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private var viewModel: LoginFragmentViewModel? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(LoginFragmentViewModel::class.java)
-    }
+    private lateinit var viewModel: LoginFragmentViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,49 +27,76 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(LoginFragmentViewModel::class.java)
 
-        // Наблюдаем за LiveData для отображения ошибок
-        viewModel?.publicLiveDataForFields?.observe(viewLifecycleOwner) { errors ->
+        // Наблюдаем за ошибками валидации
+        viewModel.publicLiveDataForFields.observe(viewLifecycleOwner) { errors ->
             if (errors != null) {
-                // Отображаем ошибки
                 binding.regEmailEditText.error = errors.getString("emailError")
                 binding.regLoginEditText.error = errors.getString("loginError")
                 binding.regPasswordEditText.error = errors.getString("passwordError")
             } else {
-                // Очищаем ошибки, если валидация прошла успешно
                 binding.regEmailEditText.error = null
                 binding.regLoginEditText.error = null
                 binding.regPasswordEditText.error = null
-                // Переходим к следующему экрану или выполняем другие действия
             }
         }
 
-        // Обработка нажатия на кнопку "Зарегистрироваться"
+        // Регистрация
         binding.buttonReg.setOnClickListener {
             val email = binding.regEmailEditText.text.toString()
             val login = binding.regLoginEditText.text.toString()
             val password = binding.regPasswordEditText.text.toString()
 
-            // Вызываем валидацию
-            viewModel?.validateInputs(email, login, password)
+            viewModel.validateInputs(email, login, password)
+            if (viewModel.publicLiveDataForFields.value == null) {
+                viewModel.registerUser(email, login, password,
+                    onSuccess = { isFirstLogin ->
+                        if (isFirstLogin) {
+                            Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+                        }
+                        toNextScreen()
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
         }
 
-
+        // Вход
         binding.buttonEnter.setOnClickListener {
-            toNextScreen()
+            val email = binding.regEmailEditText.text.toString()
+            val password = binding.regPasswordEditText.text.toString()
+
+            viewModel.loginUser(email, password,
+                onSuccess = { isFirstLogin ->
+                    if (isFirstLogin) {
+                        Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+                    }
+                    toNextScreen()
+                },
+                onError = { errorMessage ->
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            )
         }
+    }
+
+    private fun toNextScreen() {
+        val homeFragment = HomeFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, homeFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun toNextScreen() {
-        val secondFragment = HomeFragment()
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, secondFragment)
-            .addToBackStack(null)
-            .commit()
     }
 }
