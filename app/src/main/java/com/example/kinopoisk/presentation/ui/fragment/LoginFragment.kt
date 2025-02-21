@@ -52,11 +52,12 @@ class LoginFragment : Fragment() {
             if (viewModel.publicLiveDataForFields.value == null) {
                 viewModel.registerUser(email, login, password,
                     onSuccess = { isFirstLogin ->
-                        if (isFirstLogin) {
-                            Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
+                        val message = if (isFirstLogin) {
+                            "Registration successful!"
                         } else {
-                            Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+                            "Welcome back!"
                         }
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                         toNextScreen()
                     },
                     onError = { errorMessage ->
@@ -71,19 +72,24 @@ class LoginFragment : Fragment() {
             val email = binding.regEmailEditText.text.toString()
             val password = binding.regPasswordEditText.text.toString()
 
-            viewModel.loginUser(email, password,
-                onSuccess = { isFirstLogin ->
-                    if (isFirstLogin) {
-                        Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(requireContext(), "Welcome back!", Toast.LENGTH_SHORT).show()
+            // Валидируем поля перед входом
+            viewModel.validateInputs(email, "", password) // Логин не требуется для входа
+            if (viewModel.publicLiveDataForFields.value == null) {
+                viewModel.loginUser(email, password,
+                    onSuccess = { isFirstLogin ->
+                        val message = if (isFirstLogin) {
+                            "Registration successful!"
+                        } else {
+                            "Welcome back!"
+                        }
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                        toNextScreen()
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                     }
-                    toNextScreen()
-                },
-                onError = { errorMessage ->
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-                }
-            )
+                )
+            }
         }
     }
 

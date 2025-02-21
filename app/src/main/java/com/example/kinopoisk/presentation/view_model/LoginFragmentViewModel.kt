@@ -5,17 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kinopoisk.data.db.AppDatabase
-import com.example.kinopoisk.data.db.entity.User
+import com.example.kinopoisk.data.db.repository.UserRepository
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class LoginFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
+    // LiveData для ошибок валидации
     private val _liveDataForFields = MutableLiveData<Bundle?>()
     val publicLiveDataForFields: LiveData<Bundle?> get() = _liveDataForFields
 
     private val database = AppDatabase.getDatabase(application)
     private val userDao = database.userDao()
+    private val userRepository = UserRepository(userDao)
 
     // Регулярные выражения для валидации
     private val EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$")
@@ -51,29 +53,23 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
 
     fun registerUser(email: String, login: String, password: String, onSuccess: (isFirstLogin: Boolean) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val existingUser = userDao.getUserByEmail(email)
-            if (existingUser != null) {
-                onError("Пользователь с таким email уже зарегистрирован")
+            val success = userRepository.registerUser(email, login, password)
+            if (success) {
+                onSuccess(userRepository.isFirstLogin(email))
             } else {
-                val user = User(email = email, login = login, password = password)
-                userDao.insertUser(user)
-                onSuccess(isFirstLogin(email))
+                onError("Пользователь с таким email уже зарегистрирован")
             }
         }
     }
 
     fun loginUser(email: String, password: String, onSuccess: (isFirstLogin: Boolean) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val user = userDao.getUserByEmailAndPassword(email, password)
-            if (user != null) {
-                onSuccess(isFirstLogin(email))
+            val success = userRepository.loginUser(email, password)
+            if (success) {
+                onSuccess(userRepository.isFirstLogin(email))
             } else {
                 onError("Неверный email или пароль")
             }
         }
-    }
-
-    suspend fun isFirstLogin(email: String): Boolean {
-        return userDao.getUserByEmail(email) == null
     }
 }
