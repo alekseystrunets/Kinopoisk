@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="285dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -9,9 +9,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="15dp"
         android:layout_width="370dp"
         android:layout_height="240dp"
+        android:layout_marginTop="5dp"
         android:foregroundGravity="center">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -31,6 +31,7 @@
             app:layout_constraintBottom_toBottomOf="@id/recycler_item_img"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name_of_the_film"
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/white"

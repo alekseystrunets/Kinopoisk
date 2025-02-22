@@ -16,7 +16,7 @@ class FilmPageFragmentAdapter(
     val list: List<Actors>
 ) : RecyclerView.Adapter<FilmPageFragmentAdapter.NewViewHolder>() {
 
-    class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class NewViewHolder(itemView: View) : ViewHolder(itemView) {
         val name = itemView.findViewById<AppCompatTextView>(R.id.name_of_actor)
         val image = itemView.findViewById<AppCompatImageView>(R.id.actors_img)
     }
