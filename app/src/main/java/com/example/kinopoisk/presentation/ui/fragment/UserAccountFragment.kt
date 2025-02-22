@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
+import com.example.kinopoisk.data.db.SharedPreferences
 import com.example.kinopoisk.databinding.FragmentUserAccountBinding
 import com.example.kinopoisk.presentation.view_model.UserAccountViewModel
 
@@ -16,6 +17,7 @@ class UserAccountFragment : Fragment() {
     private var _binding: FragmentUserAccountBinding? = null
     private val binding get() = _binding!!
     private var viewModel: UserAccountViewModel? = null
+    private var sharedPreferences : SharedPreferences? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +30,9 @@ class UserAccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(UserAccountViewModel::class.java)
-        // Получаем email из аргументов
-        val email = arguments?.getString("email") ?: return
+        sharedPreferences = SharedPreferences(requireContext())
+
+        val email = sharedPreferences?.getUserEmail() ?: return
 
         // Загружаем данные пользователя
         viewModel?.loadUserData(email)
@@ -39,6 +42,10 @@ class UserAccountFragment : Fragment() {
             if (user != null) {
                 binding.userAccountLogin.text = user.login
                 binding.emailAccount.text = user.email
+            }else {
+                // Обработка случая, когда данные отсутствуют
+                binding.userAccountLogin.text = "Логин не найден"
+                binding.emailAccount.text = "Email не найден"
             }
         }
 
