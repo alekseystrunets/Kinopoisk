@@ -10,8 +10,9 @@ import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentHomeBinding
 import com.example.kinopoisk.presentation.Film
 import com.example.kinopoisk.presentation.adapter.CategoriesAdapter
+import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnFilmClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -34,7 +35,7 @@ class HomeFragment : Fragment() {
         val categories = listOf(
             Pair("Лучшие фильмы", listOf(
                 Film("Три мушкетера", "image_url_1"),
-                Film("Фильм 2", "image_url_2"),
+                Film("Ля Комедия 2, или Совсем другая история с элементами большого искусства", "image_url_2"),
                 Film("Три мушкетера", "image_url_1"),
                 Film("Три мушкетера", "image_url_1"),
                 Film("Фильм 2", "image_url_2"),
@@ -50,7 +51,7 @@ class HomeFragment : Fragment() {
                 Film("Фильм 3", "image_url_3"),
                 Film("Фильм 4", "image_url_4")
             )),
-                    Pair("Топ", listOf(
+            Pair("Топ", listOf(
                 Film("Фильм 3", "image_url_3"),
                 Film("Фильм 3", "image_url_3"),
                 Film("Фильм 3", "image_url_3"),
@@ -59,28 +60,28 @@ class HomeFragment : Fragment() {
                 Film("Фильм 3", "image_url_3"),
                 Film("Фильм 4", "image_url_4")
             )),
-        Pair("Актуальное", listOf(
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 4", "image_url_4")
-        )),
-        Pair("Сериалы", listOf(
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 3", "image_url_3"),
-            Film("Фильм 4", "image_url_4")
-        ))
+            Pair("Актуальное", listOf(
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 4", "image_url_4")
+            )),
+            Pair("Сериалы", listOf(
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 3", "image_url_3"),
+                Film("Фильм 4", "image_url_4")
+            ))
         )
 
         binding.firstRecycleView.layoutManager = LinearLayoutManager(context)
-        binding.firstRecycleView.adapter = CategoriesAdapter(categories)
+        binding.firstRecycleView.adapter = CategoriesAdapter(categories, this)
 
         binding.buttonAccount.setOnClickListener {
             toAccountScreen()
@@ -89,6 +90,14 @@ class HomeFragment : Fragment() {
         binding.buttonFavorites.setOnClickListener {
             toFavoritesScreen()
         }
+    }
+
+    override fun onFilmClick(film: Film) {
+        val filmPageFragment = FilmPageFragment.newInstance(film)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, filmPageFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun toAccountScreen() {

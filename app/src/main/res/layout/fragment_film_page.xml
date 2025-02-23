@@ -23,6 +23,7 @@
         app:layout_constraintEnd_toEndOf="@id/img_from_api"/>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:paddingHorizontal="15dp"
         android:fontFamily="@font/sangbleu_sunrise"
         android:id="@+id/name_of_the_film"
         android:textColor="@color/white"

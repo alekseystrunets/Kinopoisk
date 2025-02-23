@@ -6,14 +6,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kinopoisk.databinding.RecyclerViewFirstItemBinding
 import com.example.kinopoisk.presentation.Film
+import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
 
-class CategoriesAdapter(private val categories: List<Pair<String, List<Film>>>) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
+class CategoriesAdapter(
+    private val categories: List<Pair<String, List<Film>>>,
+    private val listener: OnFilmClickListener
+) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
     inner class CategoryViewHolder(private val binding: RecyclerViewFirstItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(category: Pair<String, List<Film>>) {
             binding.discriptionAboutRecycler.text = category.first
             binding.thecondRecycler.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
-            binding.thecondRecycler.adapter = FilmsAdapter(category.second)
+            binding.thecondRecycler.adapter = FilmsAdapter(category.second, listener)
         }
     }
 

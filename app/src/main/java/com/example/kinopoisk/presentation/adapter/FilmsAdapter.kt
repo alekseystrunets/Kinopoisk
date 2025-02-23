@@ -4,17 +4,27 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.ThecondRecyclerViewItemBinding
 import com.example.kinopoisk.presentation.Film
+import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
 
-class FilmsAdapter(private val films: List<Film>) : RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
+class FilmsAdapter(
+    private val films: List<Film>,
+    private val listener: OnFilmClickListener
+) : RecyclerView.Adapter<FilmsAdapter.FilmViewHolder>() {
 
     inner class FilmViewHolder(private val binding: ThecondRecyclerViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(film: Film) {
             Glide.with(binding.root.context)
                 .load(film.imageUrl)
+                .placeholder(R.drawable.baseline_downloading_24)
+                .error(R.drawable.baseline_do_disturb_alt_24)
                 .into(binding.filmImage)
             binding.titleOfTheFilm.text = film.title
+            binding.root.setOnClickListener {
+                listener.onFilmClick(film)
+            }
         }
     }
 

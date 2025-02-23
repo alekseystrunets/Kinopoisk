@@ -16,7 +16,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/recycler_item_img"
-            android:background="@color/white"
+            android:background="@color/semi_transparent_gray"
             app:layout_constraintTop_toTopOf="@id/recycler_item"
             app:layout_constraintStart_toStartOf="@id/recycler_item"
             app:layout_constraintEnd_toEndOf="@id/recycler_item"
