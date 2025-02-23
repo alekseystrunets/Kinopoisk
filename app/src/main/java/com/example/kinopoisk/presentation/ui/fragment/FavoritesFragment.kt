@@ -26,7 +26,13 @@ class FavoritesFragment : Fragment() {
         // Initialize the adapter with a sample list of favorites
         val favoritesList = listOf(
             Favorites("Movie 1", "https://example.com/image1.jpg"),
-            Favorites("Movie 2", "https://example.com/image2.jpg")
+            Favorites("Movie 2", "https://example.com/image2.jpg"),
+            Favorites("Movie 3", "https://example.com/image2.jpg"),
+            Favorites("Movie 4", "https://example.com/image2.jpg"),
+            Favorites("Movie 5", "https://example.com/image2.jpg"),
+            Favorites("Movie 6", "https://example.com/image2.jpg"),
+            Favorites("Movie 7", "https://example.com/image2.jpg")
+
         )
         adapter = FavoritesFragmentAdapter(favoritesList)
     }

@@ -44,8 +44,8 @@
             app:layout_constraintEnd_toEndOf="@id/recycler_item"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/baseline_expand_circle_down_24"
             app:layout_constraintEnd_toEndOf="@id/recycler_item"
             app:layout_constraintTop_toTopOf="@id/recycler_item"
