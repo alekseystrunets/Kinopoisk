@@ -63,7 +63,9 @@ class FilmPageFragment : Fragment() {
         recyclerView = binding.recVwActors
         adapter = FilmPageFragmentAdapter(listOfActors)
         recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = LinearLayoutManager(context)
+
+        // Установка LayoutManager с горизонтальной ориентацией
+        recyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         // Обновите UI с данными о фильме
         film?.let {
