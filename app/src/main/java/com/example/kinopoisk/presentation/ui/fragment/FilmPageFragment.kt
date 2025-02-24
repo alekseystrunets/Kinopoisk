@@ -73,6 +73,10 @@ class FilmPageFragment : Fragment() {
             // Установите другие поля фильма
         }
 
+        binding.descriptiomAboutFilm.setOnClickListener{
+            toAdditionalPageFilm()
+        }
+
         binding.buttonHome.setOnClickListener {
             toHomeScreen()
         }
@@ -89,6 +93,12 @@ class FilmPageFragment : Fragment() {
     private fun toHomeScreen() {
         val homeScreen = HomeFragment()
         parentFragmentManager.beginTransaction().replace(R.id.fragment_container, homeScreen)
+            .addToBackStack(null).commit()
+    }
+
+    private fun toAdditionalPageFilm() {
+        val additionalPageFilmFragment = AdditionalPageFilmFragment()
+        parentFragmentManager.beginTransaction().replace(R.id.fragment_container, additionalPageFilmFragment)
             .addToBackStack(null).commit()
     }
 

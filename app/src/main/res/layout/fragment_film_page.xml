@@ -115,9 +115,10 @@
         app:layout_constraintTop_toBottomOf="@id/descriptiom_about_film"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingLeft="15dp"
+        android:paddingTop="10dp"
         android:text="Актеры"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="25sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rec_vw_actors"
