@@ -15,7 +15,6 @@ import com.example.kinopoisk.presentation.adapter.CategoriesAdapter
 import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
 import com.example.kinopoisk.presentation.ui.fragment.FavoritesFragment
 import com.example.kinopoisk.presentation.ui.fragment.FilmPageFragment
-import com.example.kinopoisk.presentation.ui.fragment.UserAccountFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch

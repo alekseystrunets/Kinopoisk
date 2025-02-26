@@ -1,9 +1,9 @@
 package com.example.kinopoisk.presentation.ui.activity
 
+import LoginFragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kinopoisk.R
-import com.example.kinopoisk.presentation.ui.fragment.LoginFragment
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

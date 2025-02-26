@@ -9,7 +9,7 @@ import com.example.kinopoisk.data.db.repository.UserRepository
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
-class LoginFragmentViewModel(application: Application) : AndroidViewModel(application) {
+class RegistrationFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _liveDataForFields = MutableLiveData<Bundle?>()
     val publicLiveDataForFields: LiveData<Bundle?> get() = _liveDataForFields
@@ -19,15 +19,22 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
     private val userRepository = UserRepository(userDao)
 
     private val EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$")
+    private val LOGIN_PATTERN = Pattern.compile("^[A-Za-z0-9_]{3,20}\$")
     private val PASSWORD_PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#\$%^&+=!])(?=\\S+\$).{8,}\$")
 
-    fun validateInputs(email: String, password: String) {
+    fun validateInputs(email: String, login: String, password: String) {
         val errors = Bundle()
 
         if (email.isEmpty()) {
             errors.putString("emailError", "Email не может быть пустым")
         } else if (!EMAIL_PATTERN.matcher(email).matches()) {
             errors.putString("emailError", "Некорректный формат email")
+        }
+
+        if (login.isEmpty()) {
+            errors.putString("loginError", "Логин не может быть пустым")
+        } else if (!LOGIN_PATTERN.matcher(login).matches()) {
+            errors.putString("loginError", "Логин должен содержать только буквы, цифры и символы подчеркивания (от 3 до 20 символов)")
         }
 
         if (password.isEmpty()) {
@@ -39,13 +46,13 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
         _liveDataForFields.value = if (errors.isEmpty) null else errors
     }
 
-    fun loginUser(email: String, password: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+    fun registerUser(email: String, login: String, password: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val success = userRepository.loginUser(email, password)
+            val success = userRepository.registerUser(email, login, password)
             if (success) {
                 onSuccess(email)
             } else {
-                onError("Неверный email или пароль")
+                onError("Пользователь с таким email уже зарегистрирован")
             }
         }
     }

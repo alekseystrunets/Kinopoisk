@@ -1,24 +1,21 @@
-package com.example.kinopoisk.presentation.ui.fragment
-
-import HomeFragment
-import LoginFragmentViewModel
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
-import com.example.kinopoisk.data.db.SharedPreferences
 import com.example.kinopoisk.databinding.FragmentUserAccountBinding
+import com.example.kinopoisk.presentation.ui.fragment.FavoritesFragment
 import com.example.kinopoisk.presentation.view_model.UserAccountViewModel
 
 class UserAccountFragment : Fragment() {
 
     private var _binding: FragmentUserAccountBinding? = null
     private val binding get() = _binding!!
-    private var viewModel: UserAccountViewModel? = null
-    private var sharedPreferences : SharedPreferences? = null
+    private lateinit var viewModel: UserAccountViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,26 +28,29 @@ class UserAccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(UserAccountViewModel::class.java)
-        sharedPreferences = SharedPreferences(requireContext())
 
-        val email = sharedPreferences?.getUserEmail() ?: return
+        // Получаем email из SharedPreferences
+        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val userEmail = sharedPreferences.getString("user_email", null)
+        Log.d("UserAccountFragment", "Email retrieved from SharedPreferences: $userEmail")
 
-        // Загружаем данные пользователя
-        viewModel?.loadUserData(email)
+        if (userEmail != null) {
+            viewModel.loadUserData(userEmail)
+        } else {
+            binding.userAccountLogin.text = "Пользователь не найден"
+            binding.emailAccount.text = "Email не найден"
+        }
 
-        // Наблюдаем за данными пользователя
-        viewModel?.userData?.observe(viewLifecycleOwner) { user ->
+        viewModel.userData.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 binding.userAccountLogin.text = user.login
                 binding.emailAccount.text = user.email
-            }else {
-                // Обработка случая, когда данные отсутствуют
+            } else {
                 binding.userAccountLogin.text = "Логин не найден"
                 binding.emailAccount.text = "Email не найден"
             }
         }
 
-        // Обработка нажатий на кнопки
         binding.buttonHome.setOnClickListener {
             toHomeScreen()
         }
@@ -61,9 +61,9 @@ class UserAccountFragment : Fragment() {
     }
 
     private fun toHomeScreen() {
-        val homeScreen = HomeFragment()
+        val homeFragment = HomeFragment()
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, homeScreen)
+            .replace(R.id.fragment_container, homeFragment)
             .addToBackStack(null)
             .commit()
     }
