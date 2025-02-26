@@ -1,5 +1,6 @@
 package com.example.kinopoisk.presentation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,7 +10,7 @@ import com.example.kinopoisk.presentation.Film
 import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
 
 class CategoriesAdapter(
-    private val categories: List<Pair<String, List<Film>>>,
+    private var categories: List<Pair<String, List<Film>>>,
     private val listener: OnFilmClickListener
 ) : RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
 
@@ -18,6 +19,7 @@ class CategoriesAdapter(
             binding.discriptionAboutRecycler.text = category.first
             binding.thecondRecycler.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
             binding.thecondRecycler.adapter = FilmsAdapter(category.second, listener)
+            Log.d("CategoriesAdapter", "Привязана категория: ${category.first}")
         }
     }
 
@@ -31,4 +33,10 @@ class CategoriesAdapter(
     }
 
     override fun getItemCount(): Int = categories.size
+
+    fun updateData(newCategories: List<Pair<String, List<Film>>>) {
+        this.categories = newCategories
+        notifyDataSetChanged() // Уведомляем RecyclerView об изменении данных
+        Log.d("CategoriesAdapter", "Данные обновлены, количество категорий: ${newCategories.size}")
+    }
 }

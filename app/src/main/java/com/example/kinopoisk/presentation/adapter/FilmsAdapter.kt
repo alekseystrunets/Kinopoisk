@@ -1,9 +1,11 @@
 package com.example.kinopoisk.presentation.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.ThecondRecyclerViewItemBinding
 import com.example.kinopoisk.presentation.Film
@@ -16,15 +18,23 @@ class FilmsAdapter(
 
     inner class FilmViewHolder(private val binding: ThecondRecyclerViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(film: Film) {
+            // Если title равен null, используем заглушку
+            val title = film.title ?: "Название отсутствует"
+            binding.titleOfTheFilm.text = title
+
+            // Если imageUrl равен null, используем заглушку
+            val imageUrl = film.imageUrl ?: R.drawable.baseline_do_disturb_alt_24
             Glide.with(binding.root.context)
-                .load(film.imageUrl)
+                .load(imageUrl)
                 .placeholder(R.drawable.baseline_downloading_24)
                 .error(R.drawable.baseline_do_disturb_alt_24)
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // Кэшируем изображения
                 .into(binding.filmImage)
-            binding.titleOfTheFilm.text = film.title
+
             binding.root.setOnClickListener {
                 listener.onFilmClick(film)
             }
+            Log.d("FilmsAdapter", "Привязан фильм: $title")
         }
     }
 

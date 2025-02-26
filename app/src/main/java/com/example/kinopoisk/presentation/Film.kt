@@ -4,8 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Film(
-    val title: String,
-    val imageUrl: String
+    val title: String?,
+    val imageUrl: String?
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
