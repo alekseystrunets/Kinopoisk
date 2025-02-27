@@ -1,34 +1,50 @@
 package com.example.kinopoisk.presentation
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Film(
-    val title: String?,
-    val imageUrl: String?
-) : Parcelable {
+    val id: Int? = null,
+    val name: String? = null,
+    val alternativeName: String? = null,
+    val year: Int? = null,
+    val description: String? = null,
+    val rating: Rating? = null,
+    val poster: Poster? = null,
+    val genres: List<Genre>? = null,
+    val countries: List<Country>? = null,
+    val imageUrl: String? = null,
+    val persons: List<Person>?// Для совместимости с предыдущим классом
+) : Parcelable
 
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readString() ?: ""
-    )
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(title)
-        parcel.writeString(imageUrl)
-    }
+@Parcelize
+data class Person(
+    val id: Int,
+    val name: String?,
+    val photo: String? // Фото актера
+): Parcelable
 
-    override fun describeContents(): Int {
-        return 0
-    }
+@Parcelize
+data class Rating(
+    val kp: Double,
+    val imdb: Double,
+    val tmdb: Double
+) : Parcelable
 
-    companion object CREATOR : Parcelable.Creator<Film> {
-        override fun createFromParcel(parcel: Parcel): Film {
-            return Film(parcel)
-        }
+@Parcelize
+data class Poster(
+    val url: String,
+    val previewUrl: String? = null
+) : Parcelable
 
-        override fun newArray(size: Int): Array<Film?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+@Parcelize
+data class Genre(
+    val name: String
+) : Parcelable
+
+@Parcelize
+data class Country(
+    val name: String
+) : Parcelable

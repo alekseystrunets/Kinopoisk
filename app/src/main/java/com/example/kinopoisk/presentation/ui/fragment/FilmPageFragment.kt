@@ -1,14 +1,15 @@
 package com.example.kinopoisk.presentation.ui.fragment
 
-import HomeFragment
 import UserAccountFragment
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
 import com.example.kinopoisk.presentation.Actors
@@ -23,17 +24,12 @@ class FilmPageFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     private var adapter: FilmPageFragmentAdapter? = null
 
-    private val listOfActors = mutableListOf(
-        Actors("Actor 1", "12"),
-        Actors("Actor 2", "12"),
-        Actors("Actor 3", "12")
-    )
-
     private var film: Film? = null
 
     companion object {
         private const val ARG_FILM = "film"
 
+        // Метод для создания нового экземпляра фрагмента с передачей данных о фильме
         fun newInstance(film: Film): FilmPageFragment {
             val args = Bundle().apply {
                 putParcelable(ARG_FILM, film)
@@ -46,8 +42,9 @@ class FilmPageFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Получаем данные о фильме из аргументов
         arguments?.let {
-            film = it.getParcelable(ARG_FILM, Film::class.java)
+            film = it.getParcelable(ARG_FILM)
         }
     }
 
@@ -55,6 +52,7 @@ class FilmPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Инициализация ViewBinding
         _binding = FragmentFilmPageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -62,20 +60,46 @@ class FilmPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Настройка RecyclerView
         recyclerView = binding.recVwActors
-        adapter = FilmPageFragmentAdapter(listOfActors)
+        adapter = FilmPageFragmentAdapter(mutableListOf())
         recyclerView?.adapter = adapter
-
-        // Установка LayoutManager с горизонтальной ориентацией
         recyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        // Обновите UI с данными о фильме
-        film?.let {
-            binding.nameOfTheFilm.text = it.title
-            // Установите другие поля фильма
+        // Отображение данных о фильме
+        film?.let { film ->
+            Log.d("FilmPageFragment", "Persons: ${film.persons}") // Логируем список актеров
+
+            // Название фильма
+            binding.nameOfTheFilm.text = film.name ?: film.alternativeName ?: "Unknown"
+            // Информация о фильме (год и страны)
+            binding.informationAboutFilm.text = "${film.year ?: "Unknown"}, ${film.countries?.joinToString { country -> country.name } ?: "Unknown"}"
+            // Описание фильма
+            binding.filmDescription.text = film.description ?: "No description available"
+
+            // Загрузка постера фильма с помощью Glide
+            Glide.with(this)
+                .load(film.poster?.url)
+                .into(binding.imgFromApi)
+
+            // Загрузка актеров из поля `persons`
+            val actors = film.persons?.mapNotNull { person ->
+                Actors(
+                    id = person.id ?: 0,
+                    name = person.name ?: "Unknown",
+                    photo = person.photo ?: ""
+                )
+            }?.take(4)
+
+            Log.d("FilmPageFragment", "Actors: $actors") // Логируем список актеров
+
+            if (actors != null) {
+                adapter?.updateActors(actors)
+            }
         }
 
-        binding.descriptiomAboutFilm.setOnClickListener{
+        // Обработчики нажатий на кнопки
+        binding.descriptiomAboutFilm.setOnClickListener {
             toAdditionalPageFilm()
         }
 
@@ -92,6 +116,7 @@ class FilmPageFragment : Fragment() {
         }
     }
 
+    // Методы для навигации между фрагментами
     private fun toHomeScreen() {
         val homeScreen = HomeFragment()
         parentFragmentManager.beginTransaction().replace(R.id.fragment_container, homeScreen)
@@ -114,5 +139,10 @@ class FilmPageFragment : Fragment() {
         val favoritesFragment = FavoritesFragment()
         parentFragmentManager.beginTransaction().replace(R.id.fragment_container, favoritesFragment)
             .addToBackStack(null).commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

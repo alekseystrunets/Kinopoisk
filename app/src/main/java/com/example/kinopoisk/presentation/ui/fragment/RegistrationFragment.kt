@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentRegistrationBinding
+import com.example.kinopoisk.presentation.ui.fragment.HomeFragment
 
 class RegistrationFragment : Fragment() {
 

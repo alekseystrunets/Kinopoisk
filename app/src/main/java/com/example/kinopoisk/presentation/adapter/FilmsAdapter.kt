@@ -19,7 +19,7 @@ class FilmsAdapter(
     inner class FilmViewHolder(private val binding: ThecondRecyclerViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(film: Film) {
             // Если title равен null, используем заглушку
-            val title = film.title ?: "Название отсутствует"
+            val title = film.name ?: "Название отсутствует"
             binding.titleOfTheFilm.text = title
 
             // Если imageUrl равен null, используем заглушку

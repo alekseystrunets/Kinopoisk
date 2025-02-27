@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentUserAccountBinding
 import com.example.kinopoisk.presentation.ui.fragment.FavoritesFragment
+import com.example.kinopoisk.presentation.ui.fragment.HomeFragment
 import com.example.kinopoisk.presentation.view_model.UserAccountViewModel
 
 class UserAccountFragment : Fragment() {

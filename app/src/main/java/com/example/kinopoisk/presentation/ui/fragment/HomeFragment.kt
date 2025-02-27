@@ -1,4 +1,7 @@
-import android.icu.text.SimpleDateFormat
+package com.example.kinopoisk.presentation.ui.fragment
+
+import ApiResponse
+import UserAccountFragment
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,21 +16,18 @@ import com.example.kinopoisk.databinding.FragmentHomeBinding
 import com.example.kinopoisk.presentation.Film
 import com.example.kinopoisk.presentation.adapter.CategoriesAdapter
 import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
-import com.example.kinopoisk.presentation.ui.fragment.FavoritesFragment
-import com.example.kinopoisk.presentation.ui.fragment.FilmPageFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.util.Calendar
-import java.util.Locale
 
 class HomeFragment : Fragment(), OnFilmClickListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val apiKey = "API_KEY"
+    private val apiKey = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +40,6 @@ class HomeFragment : Fragment(), OnFilmClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Устанавливаем пустой адаптер сразу
         binding.firstRecycleView.layoutManager = LinearLayoutManager(context)
         val adapter = CategoriesAdapter(mutableListOf(), this@HomeFragment)
         binding.firstRecycleView.adapter = adapter
@@ -48,16 +47,14 @@ class HomeFragment : Fragment(), OnFilmClickListener {
         val categories = mutableListOf<Pair<String, List<Film>>>()
 
         lifecycleScope.launch {
-            // Текущий год как строка
             val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
 
-            // Запускаем все запросы параллельно
             val topRatedDeferred = async {
                 RetrofitClient.api.getMovies(
                     apiKey,
-                    rating = "7-10", // Расширяем диапазон рейтинга
-                    countries = "Россия,США,Франция,Великобритания", // Указываем несколько стран
-                    limit = 3, // Увеличиваем лимит
+                    rating = "7-10",
+                    countries = "Россия,США,Франция,Великобритания",
+                    limit = 3,
                     page = 1
                 )
             }
@@ -65,39 +62,38 @@ class HomeFragment : Fragment(), OnFilmClickListener {
                 RetrofitClient.api.getMovies(
                     apiKey,
                     year = currentYear,
-                    limit = 3 // Увеличиваем лимит
+                    limit = 3
                 )
             }
             val actionMoviesDeferred = async {
                 RetrofitClient.api.getMovies(
                     apiKey,
                     genre = "боевик",
-                    limit = 3 // Увеличиваем лимит
+                    limit = 3
                 )
             }
             val thrillersDeferred = async {
                 RetrofitClient.api.getMovies(
                     apiKey,
                     genre = "триллер",
-                    limit = 3 // Увеличиваем лимит
+                    limit = 3
                 )
             }
             val horrorsDeferred = async {
                 RetrofitClient.api.getMovies(
                     apiKey,
                     genre = "ужасы",
-                    limit = 3 // Увеличиваем лимит
+                    limit = 3
                 )
             }
             val topMoviesDeferred = async {
                 RetrofitClient.api.getMovies(
                     apiKey,
-                    rating = "6-10", // Расширяем диапазон рейтинга
-                    limit = 3 // Увеличиваем лимит
+                    rating = "6-10",
+                    limit = 3
                 )
             }
 
-            // Ожидаем завершения всех запросов
             val topRatedResponse = topRatedDeferred.await()
             val newMoviesResponse = newMoviesDeferred.await()
             val actionMoviesResponse = actionMoviesDeferred.await()
@@ -105,15 +101,6 @@ class HomeFragment : Fragment(), OnFilmClickListener {
             val horrorsResponse = horrorsDeferred.await()
             val topMoviesResponse = topMoviesDeferred.await()
 
-            // Логируем ответы
-            Log.d("HomeFragment", "Ответ для Лучших фильмов: ${topRatedResponse.body()}")
-            Log.d("HomeFragment", "Ответ для Новинок: ${newMoviesResponse.body()}")
-            Log.d("HomeFragment", "Ответ для Боевиков: ${actionMoviesResponse.body()}")
-            Log.d("HomeFragment", "Ответ для Триллеров: ${thrillersResponse.body()}")
-            Log.d("HomeFragment", "Ответ для Хорроров: ${horrorsResponse.body()}")
-            Log.d("HomeFragment", "Ответ для Топ фильмов: ${topMoviesResponse.body()}")
-
-            // Обрабатываем ответы
             processResponse(topRatedResponse, "Лучшие фильмы", categories)
             processResponse(newMoviesResponse, "Новинки", categories)
             processResponse(actionMoviesResponse, "Боевики", categories)
@@ -121,14 +108,12 @@ class HomeFragment : Fragment(), OnFilmClickListener {
             processResponse(horrorsResponse, "Хорроры", categories)
             processResponse(topMoviesResponse, "Топ фильмы", categories)
 
-            // Обновляем адаптер с новыми данными
             withContext(Dispatchers.Main) {
                 adapter.updateData(categories)
                 Log.d("HomeFragment", "Адаптер обновлён с ${categories.size} категориями")
             }
         }
 
-        // Обработчики нажатий на кнопки
         binding.buttonAccount.setOnClickListener {
             toAccountScreen()
         }
@@ -146,10 +131,9 @@ class HomeFragment : Fragment(), OnFilmClickListener {
         if (response.isSuccessful) {
             response.body()?.docs?.let { apiFilms ->
                 val films = apiFilms.mapNotNull { apiFilm ->
-                    // Используем alternativeName, если name равен null
                     val title = apiFilm.name ?: apiFilm.alternativeName ?: return@mapNotNull null
                     val posterUrl = apiFilm.poster?.url ?: return@mapNotNull null
-                    Film(title, posterUrl)
+                    apiFilm.copy(imageUrl = posterUrl)
                 }
 
                 if (films.isNotEmpty()) {
