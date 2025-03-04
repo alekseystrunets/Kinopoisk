@@ -116,7 +116,7 @@ class FilmPageFragment : Fragment() {
     }
 
     private fun toAdditionalPageFilm() {
-        val additionalPageFilmFragment = AdditionalPageFilmFragment()
+        val additionalPageFilmFragment = AdditionalPageFilmFragment.newInstance(film?.description ?: "No description available")
         parentFragmentManager.beginTransaction().replace(R.id.fragment_container, additionalPageFilmFragment)
             .addToBackStack(null).commit()
     }
