@@ -15,9 +15,14 @@ data class Film(
     val genres: List<Genre>? = null,
     val countries: List<Country>? = null,
     val imageUrl: String? = null,
-    val persons: List<Person>?// Для совместимости с предыдущим классом
+    val votes: Votes?
 ) : Parcelable
 
+
+@Parcelize
+data class Votes(
+    val kp: Int?
+): Parcelable
 
 @Parcelize
 data class Person(

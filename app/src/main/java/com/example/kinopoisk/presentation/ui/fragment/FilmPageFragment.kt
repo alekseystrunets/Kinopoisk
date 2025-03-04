@@ -3,26 +3,20 @@ package com.example.kinopoisk.presentation.ui.fragment
 import UserAccountFragment
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
-import com.example.kinopoisk.presentation.Actors
 import com.example.kinopoisk.presentation.Film
-import com.example.kinopoisk.presentation.adapter.FilmPageFragmentAdapter
 
 class FilmPageFragment : Fragment() {
 
     private var _binding: FragmentFilmPageBinding? = null
     private val binding get() = _binding!!
-
-    private var recyclerView: RecyclerView? = null
-    private var adapter: FilmPageFragmentAdapter? = null
 
     private var film: Film? = null
 
@@ -60,15 +54,8 @@ class FilmPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Настройка RecyclerView
-        recyclerView = binding.recVwActors
-        adapter = FilmPageFragmentAdapter(mutableListOf())
-        recyclerView?.adapter = adapter
-        recyclerView?.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
         // Отображение данных о фильме
         film?.let { film ->
-            Log.d("FilmPageFragment", "Persons: ${film.persons}") // Логируем список актеров
 
             // Название фильма
             binding.nameOfTheFilm.text = film.name ?: film.alternativeName ?: "Unknown"
@@ -82,19 +69,24 @@ class FilmPageFragment : Fragment() {
                 .load(film.poster?.url)
                 .into(binding.imgFromApi)
 
-            // Загрузка актеров из поля `persons`
-            val actors = film.persons?.mapNotNull { person ->
-                Actors(
-                    id = person.id ?: 0,
-                    name = person.name ?: "Unknown",
-                    photo = person.photo ?: ""
-                )
-            }?.take(4)
+            // Отображение оценки и количества оценок
+            film.rating?.kp?.let { rating ->
+                // Форматируем оценку до одного знака после запятой
+                val formattedRating = String.format("%.1f", rating)
+                binding.textViewRating.text = formattedRating
 
-            Log.d("FilmPageFragment", "Actors: $actors") // Логируем список актеров
+                // Изменение цвета текста в зависимости от оценки
+                val textColor = if (rating <= 6.5) {
+                    ContextCompat.getColor(requireContext(), R.color.red) // Красный цвет
+                } else {
+                    ContextCompat.getColor(requireContext(), R.color.green) // Зеленый цвет
+                }
+                binding.textViewRating.setTextColor(textColor)
+            }
 
-            if (actors != null) {
-                adapter?.updateActors(actors)
+            // Отображение количества оценок
+            film.votes?.kp?.let { votes ->
+                binding.allCountsOfRating.text = "$votes оценок"
             }
         }
 

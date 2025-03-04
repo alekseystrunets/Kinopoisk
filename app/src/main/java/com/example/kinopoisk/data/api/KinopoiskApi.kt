@@ -1,10 +1,7 @@
 
-import com.example.kinopoisk.presentation.ActorsResponse
-import com.example.kinopoisk.presentation.Film
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface KinopoiskApi {
@@ -21,9 +18,4 @@ interface KinopoiskApi {
         @Query("page") page: Int = 1
     ): Response<ApiResponse>
 
-    @GET("v1.4/movie/{id}/persons")
-    suspend fun getActors(
-        @Path("id") filmId: Int,
-        @Header("X-API-KEY") apiKey: String
-    ): Response<ActorsResponse>
 }
