@@ -3,38 +3,41 @@ package com.example.kinopoisk.presentation.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
-import com.example.kinopoisk.presentation.Favorites
+import com.example.kinopoisk.data.db.entity.Favorites
 
-class FavoritesFragmentAdapter(
-    private val list: List<Favorites>
-) : RecyclerView.Adapter<FavoritesFragmentAdapter.NewViewHolder>() {
+class FavoritesFragmentAdapter(private val favorites: List<Favorites>) :
+    RecyclerView.Adapter<FavoritesFragmentAdapter.FavoritesViewHolder>() {
 
-    class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameOfTheFilm: AppCompatTextView = itemView.findViewById(R.id.name_of_the_film)
-        val image: AppCompatImageView = itemView.findViewById(R.id.recycler_item_img)
+    inner class FavoritesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val filmImage: ImageView = itemView.findViewById(R.id.recycler_item_img)
+        val filmName: TextView = itemView.findViewById(R.id.name_of_the_film)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewViewHolder {
-        return NewViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.recycler_view_favorites_films_item, parent, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.recycler_view_favorites_films_item, parent, false)
+        return FavoritesViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: NewViewHolder, position: Int) {
-        val favoriteFilm = list[position]
-        holder.nameOfTheFilm.text = favoriteFilm.nameOfTheFilm
+    override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
+        val favorite = favorites[position]
+
+        // Устанавливаем название фильма
+        holder.filmName.text = favorite.name
+
+        // Загружаем изображение с помощью Glide
         Glide.with(holder.itemView.context)
-            .load(favoriteFilm.imageUrl)
-            .placeholder(R.drawable.baseline_downloading_24)
-            .error(R.drawable.baseline_do_disturb_alt_24)
-            .into(holder.image)
+            .load(favorite.posterUrl)
+            .placeholder(R.drawable.baseline_do_disturb_alt_24)
+            .into(holder.filmImage)
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int {
+        return favorites.size
+    }
 }

@@ -1,7 +1,9 @@
 package com.example.kinopoisk.presentation.ui.fragment
 
 import UserAccountFragment
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFavoritesBinding
-import com.example.kinopoisk.presentation.Favorites
 import com.example.kinopoisk.presentation.adapter.FavoritesFragmentAdapter
+import com.example.kinopoisk.data.db.AppDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {
 
@@ -20,23 +25,6 @@ class FavoritesFragment : Fragment() {
 
     private var recyclerView: RecyclerView? = null
     private var adapter: FavoritesFragmentAdapter? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Initialize the adapter with a sample list of favorites
-        val favoritesList = listOf(
-            Favorites("Movie 1", "https://example.com/image1.jpg"),
-            Favorites("Movie 2", "https://example.com/image2.jpg"),
-            Favorites("Movie 3", "https://example.com/image2.jpg"),
-            Favorites("Movie 4", "https://example.com/image2.jpg"),
-            Favorites("Movie 5", "https://example.com/image2.jpg"),
-            Favorites("Movie 6", "https://example.com/image2.jpg"),
-            Favorites("Movie 7", "https://example.com/image2.jpg")
-
-        )
-        adapter = FavoritesFragmentAdapter(favoritesList)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,16 +37,47 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Инициализация RecyclerView
         recyclerView = binding.recyclerView
-        recyclerView?.adapter = adapter
         recyclerView?.layoutManager = LinearLayoutManager(context)
 
+        // Получение избранных фильмов из базы данных
+        loadFavorites()
+
+        // Обработчики нажатий на кнопки
         binding.buttonHome.setOnClickListener {
             toHomeScreen()
         }
 
         binding.buttonAccount.setOnClickListener {
             toAccountScreen()
+        }
+    }
+
+    private fun loadFavorites() {
+        // Получаем email текущего пользователя из SharedPreferences
+        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val userEmail = sharedPreferences.getString("user_email", null)
+
+        if (userEmail != null) {
+            // Загружаем избранные фильмы из базы данных
+            CoroutineScope(Dispatchers.IO).launch {
+                val database = AppDatabase.getDatabase(requireContext())
+                val favoritesFromDb = database.userDao().getFavoritesForUser(userEmail)
+
+                // Обновляем UI на главном потоке
+                activity?.runOnUiThread {
+                    if (favoritesFromDb.isNotEmpty()) {
+                        // Инициализируем адаптер и передаем данные
+                        adapter = FavoritesFragmentAdapter(favoritesFromDb)
+                        recyclerView?.adapter = adapter
+                    } else {
+                        Toast.makeText(requireContext(), "Нет избранных фильмов", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -72,5 +91,10 @@ class FavoritesFragment : Fragment() {
         val accountFragment = UserAccountFragment()
         parentFragmentManager.beginTransaction().replace(R.id.fragment_container, accountFragment)
             .addToBackStack(null).commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

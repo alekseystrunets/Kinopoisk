@@ -1,14 +1,20 @@
 package com.example.kinopoisk.data.db
+
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
 import com.example.kinopoisk.data.db.dao.UserDao
+import com.example.kinopoisk.data.db.entity.Favorites
 import com.example.kinopoisk.data.db.entity.User
+import com.example.kinopoisk.data.db.entity.UserFilm
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(
+    entities = [User::class, Favorites::class, UserFilm::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun userDao(): UserDao
 
     companion object {
@@ -20,8 +26,9 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "user_database"
-                ).build()
+                    "kinopoisk_database"
+                ).fallbackToDestructiveMigration() // Удаляет старую базу данных при обновлении схемы
+                    .build()
                 INSTANCE = instance
                 instance
             }

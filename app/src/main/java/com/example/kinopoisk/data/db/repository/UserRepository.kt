@@ -1,10 +1,13 @@
 package com.example.kinopoisk.data.db.repository
 
 import com.example.kinopoisk.data.db.dao.UserDao
+import com.example.kinopoisk.data.db.entity.Favorites
 import com.example.kinopoisk.data.db.entity.User
+import com.example.kinopoisk.data.db.entity.UserFilm
 
 class UserRepository(private val userDao: UserDao) {
 
+    // Методы для пользователей
     suspend fun registerUser(email: String, login: String, password: String): Boolean {
         val existingUser = userDao.getUserByEmail(email)
         return if (existingUser == null) {
@@ -21,15 +24,18 @@ class UserRepository(private val userDao: UserDao) {
         return user != null
     }
 
-    suspend fun isFirstLogin(email: String): Boolean {
-        return userDao.getUserByEmail(email) == null
-    }
-
     suspend fun getUserByEmail(email: String): User? {
         return userDao.getUserByEmail(email)
     }
 
-    suspend fun getUserById(id: Int): User? {
-        return userDao.getUserById(id)
+    // Методы для избранных фильмов
+    suspend fun addFavoriteToUser(userEmail: String, favorite: Favorites) {
+        userDao.insertFavorite(favorite)
+        val userFilm = UserFilm(userEmail = userEmail, filmId = favorite.id)
+        userDao.insertUserFilm(userFilm)
+    }
+
+    suspend fun getFavoritesForUser(userEmail: String): List<Favorites> {
+        return userDao.getFavoritesForUser(userEmail)
     }
 }

@@ -1,8 +1,9 @@
 package com.example.kinopoisk.presentation.ui.fragment
 
 import UserAccountFragment
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +13,12 @@ import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
 import com.example.kinopoisk.presentation.Film
+import com.example.kinopoisk.data.db.AppDatabase
+import com.example.kinopoisk.data.db.entity.Favorites
+import com.example.kinopoisk.data.db.entity.UserFilm
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FilmPageFragment : Fragment() {
 
@@ -105,6 +112,44 @@ class FilmPageFragment : Fragment() {
 
         binding.buttonFavorites.setOnClickListener {
             toFavoritesScreen()
+        }
+
+        // Обработчик нажатия на кнопку "Добавить в избранное"
+        binding.buttonAddToFavorites.setOnClickListener {
+            film?.let { film ->
+                // Получаем email текущего пользователя из SharedPreferences
+                val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                val userEmail = sharedPreferences.getString("user_email", null)
+
+                if (userEmail != null) {
+                    // Создаем объект Favorites
+                    val favorite = Favorites(
+                        id = film.id ?: 0, // Убедитесь, что film.id не null
+                        name = film.name ?: "Unknown",
+                        year = film.year ?: 0,
+                        description = film.description ?: "No description",
+                        posterUrl = film.poster?.url ?: "",
+                        userEmail = userEmail // Используем email пользователя
+                    )
+
+                    // Сохраняем фильм в базу данных
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val database = AppDatabase.getDatabase(requireContext())
+                        database.userDao().insertFavorite(favorite)
+
+                        // Создаем связь между пользователем и фильмом
+                        val userFilm = UserFilm(
+                            userEmail = userEmail,
+                            filmId = favorite.id
+                        )
+                        database.userDao().insertUserFilm(userFilm)
+                    }
+
+                    Toast.makeText(requireContext(), "Фильм добавлен в избранное", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
