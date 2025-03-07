@@ -3,6 +3,7 @@ package com.example.kinopoisk.data.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Delete
 import com.example.kinopoisk.data.db.entity.Favorites
 import com.example.kinopoisk.data.db.entity.User
 import com.example.kinopoisk.data.db.entity.UserFilm
@@ -27,9 +28,15 @@ interface UserDao {
     @Query("SELECT * FROM favorites WHERE id = :filmId LIMIT 1")
     suspend fun getFavoriteById(filmId: Int): Favorites?
 
+    @Delete
+    suspend fun deleteFavorite(favorite: Favorites)
+
     // Методы для связи пользователей и избранных фильмов
     @Insert
     suspend fun insertUserFilm(userFilm: UserFilm)
+
+    @Query("DELETE FROM user_films WHERE userEmail = :userEmail AND filmId = :filmId")
+    suspend fun deleteUserFilm(userEmail: String, filmId: Int)
 
     @Query("SELECT favorites.* FROM favorites " +
             "INNER JOIN user_films ON favorites.id = user_films.filmId " +

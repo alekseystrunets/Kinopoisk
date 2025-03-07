@@ -38,4 +38,10 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun getFavoritesForUser(userEmail: String): List<Favorites> {
         return userDao.getFavoritesForUser(userEmail)
     }
+
+    // Метод для удаления фильма из избранного
+    suspend fun deleteFavorite(userEmail: String, favorite: Favorites) {
+        userDao.deleteFavorite(favorite)
+        userDao.deleteUserFilm(userEmail, favorite.id)
+    }
 }
