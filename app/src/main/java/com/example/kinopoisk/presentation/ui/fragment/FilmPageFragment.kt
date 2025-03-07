@@ -2,13 +2,17 @@ package com.example.kinopoisk.presentation.ui.fragment
 
 import UserAccountFragment
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
@@ -19,6 +23,9 @@ import com.example.kinopoisk.data.db.entity.UserFilm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 
 class FilmPageFragment : Fragment() {
 
@@ -151,6 +158,97 @@ class FilmPageFragment : Fragment() {
                 }
             }
         }
+
+        // Обработчик нажатия на кнопку "Поделиться"
+        binding.button2.setOnClickListener {
+            shareFilmInfoWithImage()
+        }
+    }
+
+    // Метод для шаринга информации о фильме с картинкой
+    private fun shareFilmInfoWithImage() {
+        film?.let { film ->
+            // Проверяем, есть ли URL постера
+            val posterUrl = film.poster?.url
+            if (posterUrl != null) {
+                // Скачиваем изображение и создаем URI
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        // Скачиваем изображение
+                        val bitmap = Glide.with(requireContext())
+                            .asBitmap()
+                            .load(posterUrl)
+                            .submit()
+                            .get()
+
+                        // Сохраняем изображение во временный файл
+                        val file = File(requireContext().cacheDir, "film_poster.jpg")
+                        FileOutputStream(file).use { outputStream ->
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                        }
+
+                        // Создаем URI для файла
+                        val imageUri = FileProvider.getUriForFile(
+                            requireContext(),
+                            "${requireContext().packageName}.fileprovider", // Используйте ваш FileProvider
+                            file
+                        )
+
+                        // Переходим в главный поток для запуска Intent
+                        withContext(Dispatchers.Main) {
+                            // Формируем текст для шаринга
+                            val shareText = buildShareText(film)
+
+                            // Создаем Intent для шаринга
+                            val shareIntent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, shareText)
+                                putExtra(Intent.EXTRA_STREAM, imageUri)
+                                type = "image/jpeg"
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            }
+
+                            // Запускаем Intent
+                            startActivity(Intent.createChooser(shareIntent, "Поделиться фильмом"))
+                        }
+                    } catch (e: Exception) {
+                        // Обработка ошибок
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(requireContext(), "Ошибка при загрузке изображения", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } else {
+                // Если постер отсутствует, шарим только текст
+                shareFilmInfo()
+            }
+        }
+    }
+
+    // Метод для шаринга информации о фильме (без картинки)
+    private fun shareFilmInfo() {
+        film?.let { film ->
+            val shareText = buildShareText(film)
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(shareIntent, "Поделиться фильмом"))
+        }
+    }
+
+    // Метод для формирования текста для шаринга
+    private fun buildShareText(film: Film): String {
+        return """
+            Название: ${film.name ?: film.alternativeName ?: "Unknown"}
+            Год: ${film.year ?: "Unknown"}
+            Страны: ${film.countries?.joinToString { country -> country.name } ?: "Unknown"}
+            Описание: ${film.description ?: "No description available"}
+            Рейтинг: ${film.rating?.kp?.let { String.format("%.1f", it) } ?: "Unknown"}
+            Количество оценок: ${film.votes?.kp ?: "Unknown"}
+            Постер: ${film.poster?.url ?: "No poster available"}
+        """.trimIndent()
     }
 
     // Методы для навигации между фрагментами
