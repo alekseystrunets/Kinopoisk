@@ -18,12 +18,12 @@
             android:id="@+id/recycler_item_img"
             android:background="@color/semi_transparent_gray"
             android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        app:layout_constraintTop_toTopOf="@id/recycler_item"
-        app:layout_constraintStart_toStartOf="@id/recycler_item"
-        app:layout_constraintEnd_toEndOf="@id/recycler_item"
-        android:layout_width="370dp"
-        android:layout_height="200dp" />
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="@id/recycler_item"
+            app:layout_constraintStart_toStartOf="@id/recycler_item"
+            app:layout_constraintEnd_toEndOf="@id/recycler_item"
+            android:layout_width="370dp"
+            android:layout_height="200dp" />
 
         <View
             android:id="@+id/shadow_for_img"
@@ -50,10 +50,12 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/baseline_expand_circle_down_24"
+            android:soundEffectsEnabled="false"
+            android:focusable="false"
+            android:clickable="true"
             app:layout_constraintEnd_toEndOf="@id/recycler_item"
             app:layout_constraintTop_toTopOf="@id/recycler_item"
             android:layout_margin="10dp"/>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -78,7 +78,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="-16dp">
 
-
         <ImageButton
             android:contentDescription="@string/home"
             android:id="@+id/button_home"
@@ -86,6 +85,8 @@
             android:layout_height="65dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:soundEffectsEnabled="false"
+            android:focusable="false"
+            android:clickable="true"
             android:src="@drawable/home"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_account"
@@ -99,6 +100,8 @@
             android:layout_height="65dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:soundEffectsEnabled="false"
+            android:focusable="false"
+            android:clickable="true"
             android:src="@drawable/account"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_favorites"
@@ -113,6 +116,8 @@
             android:layout_height="65dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:soundEffectsEnabled="false"
+            android:focusable="false"
+            android:clickable="true"
             android:src="@drawable/star"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
