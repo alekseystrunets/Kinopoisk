@@ -17,11 +17,13 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/recycler_item_img"
             android:background="@color/semi_transparent_gray"
-            app:layout_constraintTop_toTopOf="@id/recycler_item"
-            app:layout_constraintStart_toStartOf="@id/recycler_item"
-            app:layout_constraintEnd_toEndOf="@id/recycler_item"
-            android:layout_width="370dp"
-            android:layout_height="200dp"/>
+            android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        app:layout_constraintTop_toTopOf="@id/recycler_item"
+        app:layout_constraintStart_toStartOf="@id/recycler_item"
+        app:layout_constraintEnd_toEndOf="@id/recycler_item"
+        android:layout_width="370dp"
+        android:layout_height="200dp" />
 
         <View
             android:id="@+id/shadow_for_img"

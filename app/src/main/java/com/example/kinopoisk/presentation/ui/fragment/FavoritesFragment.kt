@@ -14,6 +14,11 @@ import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFavoritesBinding
 import com.example.kinopoisk.presentation.adapter.FavoritesFragmentAdapter
 import com.example.kinopoisk.data.db.AppDatabase
+import com.example.kinopoisk.presentation.Film
+import com.example.kinopoisk.presentation.Poster
+import com.example.kinopoisk.presentation.Rating
+import com.example.kinopoisk.presentation.Votes
+import com.example.kinopoisk.presentation.Country
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -69,7 +74,25 @@ class FavoritesFragment : Fragment() {
                 activity?.runOnUiThread {
                     if (favoritesFromDb.isNotEmpty()) {
                         // Инициализируем адаптер и передаем данные
-                        adapter = FavoritesFragmentAdapter(favoritesFromDb)
+                        adapter = FavoritesFragmentAdapter(favoritesFromDb) { favorite ->
+                            // Создаем объект Film из Favorites
+                            val film = Film(
+                                id = favorite.id,
+                                name = favorite.name,
+                                year = favorite.year,
+                                description = favorite.description,
+                                poster = Poster(favorite.posterUrl, null), // Используем Poster
+                                rating = Rating(0.0, 0.0, 0.0), // Используем Rating
+                                votes = Votes(0), // Используем Votes
+                                countries = listOf(Country("Unknown")) // Используем Country
+                            )
+                            // Переход на FilmPageFragment
+                            val filmPageFragment = FilmPageFragment.newInstance(film)
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, filmPageFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
                         recyclerView?.adapter = adapter
                     } else {
                         Toast.makeText(requireContext(), "Нет избранных фильмов", Toast.LENGTH_SHORT).show()

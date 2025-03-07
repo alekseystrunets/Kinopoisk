@@ -31,7 +31,6 @@ class FilmPageFragment : Fragment() {
 
     private var _binding: FragmentFilmPageBinding? = null
     private val binding get() = _binding!!
-
     private var film: Film? = null
 
     companion object {
@@ -247,7 +246,6 @@ class FilmPageFragment : Fragment() {
             Описание: ${film.description ?: "No description available"}
             Рейтинг: ${film.rating?.kp?.let { String.format("%.1f", it) } ?: "Unknown"}
             Количество оценок: ${film.votes?.kp ?: "Unknown"}
-            Постер: ${film.poster?.url ?: "No poster available"}
         """.trimIndent()
     }
 

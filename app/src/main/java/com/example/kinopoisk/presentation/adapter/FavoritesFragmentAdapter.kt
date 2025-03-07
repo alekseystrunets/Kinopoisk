@@ -10,12 +10,24 @@ import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.data.db.entity.Favorites
 
-class FavoritesFragmentAdapter(private val favorites: List<Favorites>) :
-    RecyclerView.Adapter<FavoritesFragmentAdapter.FavoritesViewHolder>() {
+class FavoritesFragmentAdapter(
+    private val favorites: List<Favorites>,
+    private val onItemClick: (Favorites) -> Unit // Обработчик клика
+) : RecyclerView.Adapter<FavoritesFragmentAdapter.FavoritesViewHolder>() {
 
     inner class FavoritesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val filmImage: ImageView = itemView.findViewById(R.id.recycler_item_img)
         val filmName: TextView = itemView.findViewById(R.id.name_of_the_film)
+
+        init {
+            // Обработчик клика на элемент
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClick(favorites[position])
+                }
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
