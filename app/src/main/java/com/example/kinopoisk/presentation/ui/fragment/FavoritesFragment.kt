@@ -81,10 +81,14 @@ class FavoritesFragment : Fragment() {
                                 name = favorite.name,
                                 year = favorite.year,
                                 description = favorite.description,
-                                poster = Poster(favorite.posterUrl, null), // Используем Poster
-                                rating = Rating(0.0, 0.0, 0.0), // Используем Rating
-                                votes = Votes(0), // Используем Votes
-                                countries = listOf(Country("Unknown")) // Используем Country
+                                poster = Poster(favorite.posterUrl, null),
+                                rating = Rating(
+                                    kp = favorite.rating ?: 0.0, // Значение по умолчанию, если rating отсутствует
+                                    imdb = 0.0, // Значение по умолчанию для imdb
+                                    tmdb = 0.0  // Значение по умолчанию для tmdb
+                                ),
+                                votes = Votes(favorite.votes ?: 0), // Значение по умолчанию, если votes отсутствует
+                                countries = listOf(Country("Unknown"))
                             )
                             // Переход на FilmPageFragment
                             val filmPageFragment = FilmPageFragment.newInstance(film)

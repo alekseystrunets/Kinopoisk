@@ -10,12 +10,12 @@ data class Film(
     val alternativeName: String? = null,
     val year: Int? = null,
     val description: String? = null,
-    val rating: Rating? = null,
+    val rating: Rating? = null, // Сделайте nullable, если это возможно
     val poster: Poster? = null,
     val genres: List<Genre>? = null,
     val countries: List<Country>? = null,
     val imageUrl: String? = null,
-    val votes: Votes?
+    val votes: Votes? = null // Сделайте nullable, если это возможно
 ) : Parcelable
 
 

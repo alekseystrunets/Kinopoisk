@@ -10,5 +10,7 @@ data class Favorites(
     val year: Int,
     val description: String,
     val posterUrl: String,
-    val userEmail: String
+    val userEmail: String,
+    val rating: Double?,
+    val votes: Int?
 )

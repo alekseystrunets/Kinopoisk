@@ -11,7 +11,7 @@ import com.example.kinopoisk.data.db.entity.UserFilm
 
 @Database(
     entities = [User::class, Favorites::class, UserFilm::class],
-    version = 2,
+    version = 3, // Увеличьте версию
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

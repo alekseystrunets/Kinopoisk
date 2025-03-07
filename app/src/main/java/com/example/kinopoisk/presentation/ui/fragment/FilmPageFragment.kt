@@ -130,12 +130,14 @@ class FilmPageFragment : Fragment() {
                 if (userEmail != null) {
                     // Создаем объект Favorites
                     val favorite = Favorites(
-                        id = film.id ?: 0, // Убедитесь, что film.id не null
+                        id = film.id ?: 0,
                         name = film.name ?: "Unknown",
                         year = film.year ?: 0,
                         description = film.description ?: "No description",
                         posterUrl = film.poster?.url ?: "",
-                        userEmail = userEmail // Используем email пользователя
+                        userEmail = userEmail,
+                        rating = film.rating?.kp ?: 0.0, // Передаем рейтинг
+                        votes = film.votes?.kp ?: 0      // Передаем количество голосов
                     )
 
                     // Сохраняем фильм в базу данных
