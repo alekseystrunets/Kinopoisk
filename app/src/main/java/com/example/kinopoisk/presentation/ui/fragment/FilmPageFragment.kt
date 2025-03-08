@@ -212,7 +212,7 @@ class FilmPageFragment : Fragment() {
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 type = "text/plain"
             }
-            startActivity(Intent.createChooser(shareIntent, "Поделиться фильмом"))
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_movie)))
         }
     }
 

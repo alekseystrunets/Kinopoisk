@@ -58,7 +58,7 @@ class FavoritesFragment : Fragment() {
             // Загрузка избранных фильмов
             viewModel.loadFavorites(userEmail)
         } else {
-            Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.not_authorize), Toast.LENGTH_SHORT).show()
         }
 
         // Подписываемся на данные о избранных фильмах
@@ -109,7 +109,7 @@ class FavoritesFragment : Fragment() {
                 )
                 recyclerView?.adapter = adapter
             } else {
-                Toast.makeText(requireContext(), "Нет избранных фильмов", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.no_featured_films), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -146,7 +146,7 @@ class FavoritesFragment : Fragment() {
         }
 
         // Запускаем Intent
-        startActivity(Intent.createChooser(shareIntent, "Поделиться фильмом"))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_movie)))
     }
 
     private fun toHomeScreen() {

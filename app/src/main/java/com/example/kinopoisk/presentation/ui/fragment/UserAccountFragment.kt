@@ -35,8 +35,8 @@ class UserAccountFragment : Fragment() {
         if (userEmail != null) {
             viewModel.loadUserData(userEmail)
         } else {
-            binding.userAccountLogin.text = "Пользователь не найден"
-            binding.emailAccount.text = "Email не найден"
+            binding.userAccountLogin.text = getString(R.string.user_not_found)
+            binding.emailAccount.text = getString(R.string.email_not_found)
         }
 
         // Подписываемся на данные пользователя
@@ -45,8 +45,8 @@ class UserAccountFragment : Fragment() {
                 binding.userAccountLogin.text = user.login
                 binding.emailAccount.text = user.email
             } else {
-                binding.userAccountLogin.text = "Логин не найден"
-                binding.emailAccount.text = "Email не найден"
+                binding.userAccountLogin.text = getString(R.string.login_not_found)
+                binding.emailAccount.text = getString(R.string.email_not_found)
             }
         }
 

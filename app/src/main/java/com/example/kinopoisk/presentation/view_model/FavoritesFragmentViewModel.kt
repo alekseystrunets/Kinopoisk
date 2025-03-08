@@ -44,7 +44,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
             }
             // После удаления фильма загружаем обновленный список избранных
             loadFavorites(userEmail)
-            _toastMessage.postValue("Фильм удален из избранного")
+            _toastMessage.postValue("The film has been removed from favorites")
         }
     }
 }

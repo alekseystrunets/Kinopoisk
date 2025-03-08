@@ -34,21 +34,21 @@ class RegistrationFragmentViewModel(application: Application) : AndroidViewModel
         val errors = Bundle()
 
         if (email.isEmpty()) {
-            errors.putString("emailError", "Email не может быть пустым")
+            errors.putString("emailError", "Email cannot be empty")
         } else if (!EMAIL_PATTERN.matcher(email).matches()) {
-            errors.putString("emailError", "Некорректный формат email")
+            errors.putString("emailError", "Incorrect email format")
         }
 
         if (login.isEmpty()) {
-            errors.putString("loginError", "Логин не может быть пустым")
+            errors.putString("loginError", "Login cannot be empty")
         } else if (!LOGIN_PATTERN.matcher(login).matches()) {
-            errors.putString("loginError", "Логин должен содержать только буквы, цифры и символы подчеркивания (от 3 до 20 символов)")
+            errors.putString("loginError", "The login must contain only letters, numbers and symbols (from 3 to 20 characters).")
         }
 
         if (password.isEmpty()) {
-            errors.putString("passwordError", "Пароль не может быть пустым")
+            errors.putString("passwordError", "Password cannot be empty")
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            errors.putString("passwordError", "Пароль должен содержать минимум 8 символов, одну цифру, одну заглавную букву и один специальный символ")
+            errors.putString("passwordError", "Password must contain at least 8 characters, one number, one uppercase letter and one special character")
         }
 
         _liveDataForFields.value = if (errors.isEmpty) null else errors
@@ -64,7 +64,7 @@ class RegistrationFragmentViewModel(application: Application) : AndroidViewModel
                 onSuccess(email)
                 showToast("Registration successful!")
             } else {
-                onError("Пользователь с таким email уже зарегистрирован")
+                onError("A user with this email is already registered")
             }
         }
     }

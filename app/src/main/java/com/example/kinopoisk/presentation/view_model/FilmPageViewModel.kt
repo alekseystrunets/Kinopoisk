@@ -40,13 +40,13 @@ class FilmPageViewModel(application: Application) : AndroidViewModel(application
             if (userEmail != null) {
                 // Проверяем, есть ли фильм уже в избранном
                 val filmId = film.id ?: run {
-                    _toastMessage.postValue("Ошибка: ID фильма отсутствует")
+                    _toastMessage.postValue("Error: Movie ID is missing.")
                     return@launch
                 }
 
                 val isExists = isFavoriteExists(context, filmId, userEmail)
                 if (isExists) {
-                    _toastMessage.postValue("Фильм уже в избранном")
+                    _toastMessage.postValue("The film is already in favorites")
                     return@launch
                 }
 
@@ -76,13 +76,13 @@ class FilmPageViewModel(application: Application) : AndroidViewModel(application
                         database.userDao().insertUserFilm(userFilm)
                     }
 
-                    _toastMessage.postValue("Фильм добавлен в избранное")
+                    _toastMessage.postValue("Movie added to favorites")
                 } catch (e: Exception) {
-                    _toastMessage.postValue("Ошибка при добавлении фильма в избранное")
+                    _toastMessage.postValue("Error adding movie to favorites")
                     Log.e("FilmPageViewModel", "Ошибка при добавлении фильма в избранное", e)
                 }
             } else {
-                _toastMessage.postValue("Пользователь не авторизован")
+                _toastMessage.postValue("Save 'User' to dictionary")
             }
         }
     }

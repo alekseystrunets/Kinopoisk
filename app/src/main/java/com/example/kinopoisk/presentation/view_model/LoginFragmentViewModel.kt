@@ -33,15 +33,15 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
         val errors = Bundle()
 
         if (email.isEmpty()) {
-            errors.putString("emailError", "Email не может быть пустым")
+            errors.putString("emailError", "Email cannot be empty")
         } else if (!EMAIL_PATTERN.matcher(email).matches()) {
-            errors.putString("emailError", "Некорректный формат email")
+            errors.putString("emailError", "Incorrect email format")
         }
 
         if (password.isEmpty()) {
-            errors.putString("passwordError", "Пароль не может быть пустым")
+            errors.putString("passwordError", "Password cannot be empt")
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            errors.putString("passwordError", "Пароль должен содержать минимум 8 символов, одну цифру, одну заглавную букву и один специальный символ")
+            errors.putString("passwordError", "Password must contain at least 8 characters, one number, one uppercase letter and one special character")
         }
 
         _liveDataForFields.value = if (errors.isEmpty) null else errors
@@ -57,7 +57,7 @@ class LoginFragmentViewModel(application: Application) : AndroidViewModel(applic
                 onSuccess(email)
                 showToast("Login successful!")
             } else {
-                onError("Неверный email или пароль")
+                onError("Incorrect email or password")
             }
         }
     }

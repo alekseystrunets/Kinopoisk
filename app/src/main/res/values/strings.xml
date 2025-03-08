@@ -26,4 +26,19 @@
           which combines convenience, modern design and powerful
            tools to find the perfect movie for the evening.</string>
 
+    <string name="not_authorize">User is not authorized</string>
+    <string name="no_featured_films">No featured films</string>
+    <string name="share_movie">Share movie</string>
+    <string name="delete_from_fr">The film has been removed from favorites</string>
+
+    <string name="email_cannot_be_empty">Email cannot be empty</string>
+    <string name="inncr_em_fr">Incorrect email format</string>
+    <string name="ps_cannot_be_empty">Password cannot be empty</string>
+    <string name="big_mist">Password must contain at least 8 characters, one number, one uppercase letter and one special character</string>
+    <string name="sucess_log">Login successful!</string>
+    <string name="not_email_or_pass">Incorrect email or password</string>
+    <string name="user_not_found">User not found</string>
+    <string name="login_not_found">Login not found</string>
+    <string name="email_not_found">Email not found</string>
+
 </resources>

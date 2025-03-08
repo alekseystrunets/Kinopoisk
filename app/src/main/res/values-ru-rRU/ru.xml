@@ -26,4 +26,19 @@
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="share_film">Поделиться фильмом</string>
     <string name="menu_for_favorites_description">Меню для избранного</string>
+
+    <string name="not_authorize">Пользователь не авторизован</string>
+    <string name="no_featured_films">Нет представленных фильмов</string>
+    <string name="share_movie">Поделиться фильмом</string>
+    <string name="delete_from_fr">Фильм удален из избранного</string>
+
+    <string name="email_cannot_be_empty">Email не может быть пустым</string>
+    <string name="inncr_em_fr">Неправильный формат почты</string>
+    <string name="ps_cannot_be_empty">Пароль не может быть пустым</string>
+    <string name="big_mist">Пароль должен содержать минимум 8 символов, одну цифру, одну заглавную букву и один специальный символ</string>
+    <string name="sucess_log">Успешный вход!</string>
+    <string name="not_email_or_pass">Неправильный пароль или email</string>
+    <string name="user_not_found">Пользователь не найден</string>
+    <string name="email_not_found">Email не найден</string>
+    <string name="login_not_found">Login не найден</string>
 </resources>
