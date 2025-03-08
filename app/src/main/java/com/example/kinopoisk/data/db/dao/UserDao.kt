@@ -1,9 +1,6 @@
 package com.example.kinopoisk.data.db.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Delete
+import androidx.room.*
 import com.example.kinopoisk.data.db.entity.Favorites
 import com.example.kinopoisk.data.db.entity.User
 import com.example.kinopoisk.data.db.entity.UserFilm
@@ -22,7 +19,7 @@ interface UserDao {
     suspend fun getUserByEmail(email: String): User?
 
     // Методы для избранных фильмов
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE) // Игнорировать конфликт, если запись уже существует
     suspend fun insertFavorite(favorite: Favorites)
 
     @Query("SELECT * FROM favorites WHERE id = :filmId LIMIT 1")
@@ -43,6 +40,6 @@ interface UserDao {
             "WHERE user_films.userEmail = :userEmail")
     suspend fun getFavoritesForUser(userEmail: String): List<Favorites>
 
-    @Query("SELECT * FROM favorites WHERE id = :filmId AND userEmail = :userEmail")
+    @Query("SELECT * FROM favorites WHERE id = :filmId AND userEmail = :userEmail LIMIT 1")
     suspend fun getFavoriteByIdAndUser(filmId: Int, userEmail: String): Favorites?
 }

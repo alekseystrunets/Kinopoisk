@@ -1,3 +1,5 @@
+package com.example.kinopoisk.presentation.viewmodel
+
 import android.app.Application
 import android.content.Context
 import android.util.Log
@@ -28,15 +30,6 @@ class FilmPageViewModel(application: Application) : AndroidViewModel(application
         _film.value = film
     }
 
-    // Проверка, есть ли фильм в избранном
-    private suspend fun isFavoriteExists(context: Context, filmId: Int, userEmail: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            val database = AppDatabase.getDatabase(context)
-            val favorite = database.userDao().getFavoriteByIdAndUser(filmId, userEmail)
-            favorite != null
-        }
-    }
-
     // Добавить фильм в избранное
     fun addToFavorites(context: Context, film: Film) {
         viewModelScope.launch {
@@ -65,8 +58,8 @@ class FilmPageViewModel(application: Application) : AndroidViewModel(application
                     description = film.description ?: "No description",
                     posterUrl = film.poster?.url ?: "",
                     userEmail = userEmail,
-                    rating = film.rating?.kp ?: 0.0, // Передаем рейтинг
-                    votes = film.votes?.kp ?: 0      // Передаем количество голосов
+                    rating = film.rating?.kp ?: 0.0,
+                    votes = film.votes?.kp ?: 0
                 )
 
                 // Сохраняем фильм в базу данных
@@ -91,6 +84,15 @@ class FilmPageViewModel(application: Application) : AndroidViewModel(application
             } else {
                 _toastMessage.postValue("Пользователь не авторизован")
             }
+        }
+    }
+
+    // Проверка, есть ли фильм в избранном
+    private suspend fun isFavoriteExists(context: Context, filmId: Int, userEmail: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val database = AppDatabase.getDatabase(context)
+            val favorite = database.userDao().getFavoriteByIdAndUser(filmId, userEmail)
+            favorite != null
         }
     }
 }

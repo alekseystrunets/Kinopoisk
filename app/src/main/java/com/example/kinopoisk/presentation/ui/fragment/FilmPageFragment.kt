@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
 import com.example.kinopoisk.presentation.Film
+import com.example.kinopoisk.presentation.fragments.FavoritesFragment
+import com.example.kinopoisk.presentation.viewmodel.FilmPageViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

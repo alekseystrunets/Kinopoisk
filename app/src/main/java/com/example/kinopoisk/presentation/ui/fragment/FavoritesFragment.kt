@@ -1,3 +1,8 @@
+package com.example.kinopoisk.presentation.fragments
+
+import FavoritesViewModel
+import HomeFragment
+import UserAccountFragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -71,11 +76,11 @@ class FavoritesFragment : Fragment() {
                             description = favorite.description,
                             poster = Poster(favorite.posterUrl, null),
                             rating = Rating(
-                                kp = favorite.rating ?: 0.0, // Значение по умолчанию, если rating отсутствует
-                                imdb = 0.0, // Значение по умолчанию для imdb
-                                tmdb = 0.0  // Значение по умолчанию для tmdb
+                                kp = favorite.rating ?: 0.0,
+                                imdb = 0.0,
+                                tmdb = 0.0
                             ),
-                            votes = Votes(favorite.votes ?: 0), // Значение по умолчанию, если votes отсутствует
+                            votes = Votes(favorite.votes ?: 0),
                             countries = listOf(Country("Unknown"))
                         )
                         // Переход на FilmPageFragment
@@ -89,7 +94,9 @@ class FavoritesFragment : Fragment() {
                         when (menuItemId) {
                             R.id.action_delete -> {
                                 // Удаление фильма из избранного
-                                viewModel.deleteFavorite(userEmail!!, favorite)
+                                if (userEmail != null) {
+                                    viewModel.deleteFavorite(userEmail, favorite)
+                                }
                             }
                             R.id.action_share -> {
                                 // Шаринг информации о фильме

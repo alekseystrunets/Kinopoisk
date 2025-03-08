@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentAdditionalPageFilmBinding
+import com.example.kinopoisk.presentation.fragments.FavoritesFragment
 import com.example.kinopoisk.presentation.view_model.AdditionalPageFilmViewModel
 
 class AdditionalPageFilmFragment : Fragment() {

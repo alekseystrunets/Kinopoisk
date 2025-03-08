@@ -83,7 +83,7 @@ class FavoritesFragmentAdapter(
         // Загружаем изображение с помощью Glide
         Glide.with(holder.itemView.context)
             .load(favorite.posterUrl)
-            .placeholder(R.drawable.baseline_do_disturb_alt_24)
+            .placeholder(R.drawable.baseline_downloading_24)
             .into(holder.filmImage)
     }
 

@@ -10,6 +10,7 @@ import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentHomeBinding
 import com.example.kinopoisk.presentation.Film
 import com.example.kinopoisk.presentation.adapter.CategoriesAdapter
+import com.example.kinopoisk.presentation.fragments.FavoritesFragment
 import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
 
 class HomeFragment : Fragment(), OnFilmClickListener {

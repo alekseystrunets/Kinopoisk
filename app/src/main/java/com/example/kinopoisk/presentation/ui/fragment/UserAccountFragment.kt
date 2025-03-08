@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentUserAccountBinding
+import com.example.kinopoisk.presentation.fragments.FavoritesFragment
 
 class UserAccountFragment : Fragment() {
 

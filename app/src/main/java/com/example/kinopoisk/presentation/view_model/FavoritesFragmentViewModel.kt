@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kinopoisk.data.db.AppDatabase
 import com.example.kinopoisk.data.db.entity.Favorites
-import com.example.kinopoisk.data.db.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,13 +20,12 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     val toastMessage: LiveData<String?> get() = _toastMessage
 
     private val database = AppDatabase.getDatabase(application)
-    private val userRepository = UserRepository(database.userDao())
 
     // Загрузка избранных фильмов
     fun loadFavorites(userEmail: String) {
         viewModelScope.launch {
             val favoritesFromDb = withContext(Dispatchers.IO) {
-                userRepository.getFavoritesForUser(userEmail)
+                database.userDao().getFavoritesForUser(userEmail)
             }
             _favorites.postValue(favoritesFromDb)
         }
@@ -37,8 +35,13 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     fun deleteFavorite(userEmail: String, favorite: Favorites) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                userRepository.deleteFavorite(userEmail, favorite)
+                // Удаляем связь пользователя с фильмом
+                database.userDao().deleteUserFilm(userEmail, favorite.id)
+                // Удаляем фильм из таблицы избранных
+                database.userDao().deleteFavorite(favorite)
             }
+            // После удаления фильма загружаем обновленный список избранных
+            loadFavorites(userEmail)
             _toastMessage.postValue("Фильм удален из избранного")
         }
     }
