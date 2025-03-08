@@ -1,6 +1,5 @@
-package com.example.kinopoisk.presentation.view_model
-
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +16,12 @@ class UserAccountViewModel(application: Application) : AndroidViewModel(applicat
     // LiveData для данных пользователя
     private val _userData = MutableLiveData<User?>()
     val userData: LiveData<User?> get() = _userData
+
+    // Получить email из SharedPreferences
+    fun getUserEmail(): String? {
+        val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("user_email", null)
+    }
 
     // Загрузить данные пользователя по email
     fun loadUserData(email: String) {

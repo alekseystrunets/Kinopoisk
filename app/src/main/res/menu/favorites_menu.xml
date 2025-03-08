@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_delete"
-        android:title="Удалить из избранного" />
+        android:title="@string/remove_from_favorite" />
     <item
         android:id="@+id/action_share"
-        android:title="Поделиться" />
+        android:title="@string/share" />
 </menu>

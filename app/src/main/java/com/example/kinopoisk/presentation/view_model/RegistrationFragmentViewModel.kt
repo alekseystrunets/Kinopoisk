@@ -1,5 +1,7 @@
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,8 +13,13 @@ import java.util.regex.Pattern
 
 class RegistrationFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
+    // LiveData для ошибок валидации
     private val _liveDataForFields = MutableLiveData<Bundle?>()
     val publicLiveDataForFields: LiveData<Bundle?> get() = _liveDataForFields
+
+    // LiveData для сообщений Toast
+    private val _toastMessage = MutableLiveData<String?>()
+    val toastMessage: LiveData<String?> get() = _toastMessage
 
     private val database = AppDatabase.getDatabase(application)
     private val userDao = database.userDao()
@@ -22,7 +29,8 @@ class RegistrationFragmentViewModel(application: Application) : AndroidViewModel
     private val LOGIN_PATTERN = Pattern.compile("^[A-Za-z0-9_]{3,20}\$")
     private val PASSWORD_PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#\$%^&+=!])(?=\\S+\$).{8,}\$")
 
-    fun validateInputs(email: String, login: String, password: String) {
+    // Валидация полей
+    fun validateInputs(email: String, login: String, password: String): Boolean {
         val errors = Bundle()
 
         if (email.isEmpty()) {
@@ -44,16 +52,36 @@ class RegistrationFragmentViewModel(application: Application) : AndroidViewModel
         }
 
         _liveDataForFields.value = if (errors.isEmpty) null else errors
+        return errors.isEmpty
     }
 
+    // Регистрация пользователя
     fun registerUser(email: String, login: String, password: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             val success = userRepository.registerUser(email, login, password)
             if (success) {
+                saveUserEmail(email)
                 onSuccess(email)
+                showToast("Registration successful!")
             } else {
                 onError("Пользователь с таким email уже зарегистрирован")
             }
         }
+    }
+
+    // Сохранение email в SharedPreferences
+    private fun saveUserEmail(email: String) {
+        val sharedPreferences = getApplication<Application>().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("user_email", email).apply()
+        Log.d("RegistrationFragmentViewModel", "Email saved to SharedPreferences: $email")
+    }
+
+    // Управление сообщениями Toast
+    private fun showToast(message: String) {
+        _toastMessage.value = message
+    }
+
+    fun clearToast() {
+        _toastMessage.value = null
     }
 }

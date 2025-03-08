@@ -1,6 +1,4 @@
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentRegistrationBinding
-import com.example.kinopoisk.presentation.ui.fragment.HomeFragment
 
 class RegistrationFragment : Fragment() {
 
@@ -27,8 +24,10 @@ class RegistrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this).get(RegistrationFragmentViewModel::class.java)
 
+        // Подписываемся на ошибки валидации
         viewModel.publicLiveDataForFields.observe(viewLifecycleOwner) { errors ->
             if (errors != null) {
                 binding.regEmailEditText.error = errors.getString("emailError")
@@ -41,16 +40,26 @@ class RegistrationFragment : Fragment() {
             }
         }
 
+        // Подписываемся на сообщения Toast
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            if (message != null) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                viewModel.clearToast()  // Сбрасываем сообщение после показа
+            }
+        }
+
+        // Обработчик кнопки "Зарегистрироваться"
         binding.buttonReg.setOnClickListener {
             val email = binding.regEmailEditText.text.toString()
             val login = binding.regLoginEditText.text.toString()
             val password = binding.regPasswordEditText.text.toString()
 
-            viewModel.validateInputs(email, login, password)
-            if (viewModel.publicLiveDataForFields.value == null) {
-                viewModel.registerUser(email, login, password,
+            if (viewModel.validateInputs(email, login, password)) {
+                viewModel.registerUser(
+                    email,
+                    login,
+                    password,
                     onSuccess = { userEmail ->
-                        Toast.makeText(requireContext(), "Registration successful!", Toast.LENGTH_SHORT).show()
                         toHomeScreen(userEmail)
                     },
                     onError = { errorMessage ->
@@ -61,13 +70,8 @@ class RegistrationFragment : Fragment() {
         }
     }
 
+    // Переход на HomeFragment
     private fun toHomeScreen(userEmail: String) {
-        // Сохраняем email в SharedPreferences
-        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("user_email", userEmail).apply()
-        Log.d("RegistrationFragment", "Email saved to SharedPreferences: $userEmail")
-
-        // Переход на HomeFragment
         val homeFragment = HomeFragment()
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, homeFragment)

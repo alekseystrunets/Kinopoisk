@@ -13,8 +13,17 @@
     <string name="account">Аккаунт</string>
     <string name="favorite">Избранный</string>
     <string name="about_the_application">О приложении</string>
+    <string name="description_for_additional_page">Описание</string>
+    <string name="rating">Рейтинг Kinopoisk</string>
+    <string name="best_films">Лучшие фильмы</string>
+    <string name="remove_from_favorite">Удалить</string>
+    <string name="share">Поделиться</string>
+    <string name="all_details">Все подробности о фильме</string>
     <string name="description">Добро пожаловать в Kinopoisk — приложение для подбора фильмов,
          созданное с любовью к кино и технологиям! Это мой пет-проект,
           который объединяет в себе удобство, современный дизайн и мощные
            инструменты для поиска идеального фильма на вечер.</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="share_film">Поделиться фильмом</string>
+    <string name="menu_for_favorites_description">Меню для избранного</string>
 </resources>

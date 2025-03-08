@@ -1,6 +1,3 @@
-package com.example.kinopoisk.presentation.ui.fragment
-
-import UserAccountFragment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -13,13 +10,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
 import com.example.kinopoisk.presentation.Film
-import com.example.kinopoisk.data.db.AppDatabase
-import com.example.kinopoisk.data.db.entity.Favorites
-import com.example.kinopoisk.data.db.entity.UserFilm
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +26,7 @@ class FilmPageFragment : Fragment() {
 
     private var _binding: FragmentFilmPageBinding? = null
     private val binding get() = _binding!!
-    private var film: Film? = null
+    private lateinit var viewModel: FilmPageViewModel
 
     companion object {
         private const val ARG_FILM = "film"
@@ -51,7 +46,9 @@ class FilmPageFragment : Fragment() {
         super.onCreate(savedInstanceState)
         // Получаем данные о фильме из аргументов
         arguments?.let {
-            film = it.getParcelable(ARG_FILM)
+            val film = it.getParcelable<Film>(ARG_FILM)
+            viewModel = ViewModelProvider(this).get(FilmPageViewModel::class.java)
+            film?.let { viewModel.setFilm(it) }
         }
     }
 
@@ -67,39 +64,15 @@ class FilmPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Отображение данных о фильме
-        film?.let { film ->
+        // Подписываемся на данные о фильме
+        viewModel.film.observe(viewLifecycleOwner) { film ->
+            film?.let { displayFilmInfo(it) }
+        }
 
-            // Название фильма
-            binding.nameOfTheFilm.text = film.name ?: film.alternativeName ?: "Unknown"
-            // Информация о фильме (год и страны)
-            binding.informationAboutFilm.text = "${film.year ?: "Unknown"}, ${film.countries?.joinToString { country -> country.name } ?: "Unknown"}"
-            // Описание фильма
-            binding.filmDescription.text = film.description ?: "No description available"
-
-            // Загрузка постера фильма с помощью Glide
-            Glide.with(this)
-                .load(film.poster?.url)
-                .into(binding.imgFromApi)
-
-            // Отображение оценки и количества оценок
-            film.rating?.kp?.let { rating ->
-                // Форматируем оценку до одного знака после запятой
-                val formattedRating = String.format("%.1f", rating)
-                binding.textViewRating.text = formattedRating
-
-                // Изменение цвета текста в зависимости от оценки
-                val textColor = if (rating <= 6.5) {
-                    ContextCompat.getColor(requireContext(), R.color.red) // Красный цвет
-                } else {
-                    ContextCompat.getColor(requireContext(), R.color.green) // Зеленый цвет
-                }
-                binding.textViewRating.setTextColor(textColor)
-            }
-
-            // Отображение количества оценок
-            film.votes?.kp?.let { votes ->
-                binding.allCountsOfRating.text = "$votes оценок"
+        // Подписываемся на сообщения Toast
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            if (message != null) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -122,41 +95,8 @@ class FilmPageFragment : Fragment() {
 
         // Обработчик нажатия на кнопку "Добавить в избранное"
         binding.buttonAddToFavorites.setOnClickListener {
-            film?.let { film ->
-                // Получаем email текущего пользователя из SharedPreferences
-                val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-                val userEmail = sharedPreferences.getString("user_email", null)
-
-                if (userEmail != null) {
-                    // Создаем объект Favorites
-                    val favorite = Favorites(
-                        id = film.id ?: 0,
-                        name = film.name ?: "Unknown",
-                        year = film.year ?: 0,
-                        description = film.description ?: "No description",
-                        posterUrl = film.poster?.url ?: "",
-                        userEmail = userEmail,
-                        rating = film.rating?.kp ?: 0.0, // Передаем рейтинг
-                        votes = film.votes?.kp ?: 0      // Передаем количество голосов
-                    )
-
-                    // Сохраняем фильм в базу данных
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val database = AppDatabase.getDatabase(requireContext())
-                        database.userDao().insertFavorite(favorite)
-
-                        // Создаем связь между пользователем и фильмом
-                        val userFilm = UserFilm(
-                            userEmail = userEmail,
-                            filmId = favorite.id
-                        )
-                        database.userDao().insertUserFilm(userFilm)
-                    }
-
-                    Toast.makeText(requireContext(), "Фильм добавлен в избранное", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(requireContext(), "Пользователь не авторизован", Toast.LENGTH_SHORT).show()
-                }
+            viewModel.film.value?.let { film ->
+                viewModel.addToFavorites(requireContext(), film)
             }
         }
 
@@ -166,9 +106,44 @@ class FilmPageFragment : Fragment() {
         }
     }
 
+    // Метод для отображения данных о фильме
+    private fun displayFilmInfo(film: Film) {
+        // Название фильма
+        binding.nameOfTheFilm.text = film.name ?: film.alternativeName ?: "Unknown"
+        // Информация о фильме (год и страны)
+        binding.informationAboutFilm.text = "${film.year ?: "Unknown"}, ${film.countries?.joinToString { country -> country.name } ?: "Unknown"}"
+        // Описание фильма
+        binding.filmDescription.text = film.description ?: "No description available"
+
+        // Загрузка постера фильма с помощью Glide
+        Glide.with(this)
+            .load(film.poster?.url)
+            .into(binding.imgFromApi)
+
+        // Отображение оценки и количества оценок
+        film.rating?.kp?.let { rating ->
+            // Форматируем оценку до одного знака после запятой
+            val formattedRating = String.format("%.1f", rating)
+            binding.textViewRating.text = formattedRating
+
+            // Изменение цвета текста в зависимости от оценки
+            val textColor = if (rating <= 6.5) {
+                ContextCompat.getColor(requireContext(), R.color.red) // Красный цвет
+            } else {
+                ContextCompat.getColor(requireContext(), R.color.green) // Зеленый цвет
+            }
+            binding.textViewRating.setTextColor(textColor)
+        }
+
+        // Отображение количества оценок
+        film.votes?.kp?.let { votes ->
+            binding.allCountsOfRating.text = "$votes оценок"
+        }
+    }
+
     // Метод для шаринга информации о фильме с картинкой
     private fun shareFilmInfoWithImage() {
-        film?.let { film ->
+        viewModel.film.value?.let { film ->
             // Проверяем, есть ли URL постера
             val posterUrl = film.poster?.url
             if (posterUrl != null) {
@@ -228,7 +203,7 @@ class FilmPageFragment : Fragment() {
 
     // Метод для шаринга информации о фильме (без картинки)
     private fun shareFilmInfo() {
-        film?.let { film ->
+        viewModel.film.value?.let { film ->
             val shareText = buildShareText(film)
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
@@ -259,7 +234,7 @@ class FilmPageFragment : Fragment() {
     }
 
     private fun toAdditionalPageFilm() {
-        val additionalPageFilmFragment = AdditionalPageFilmFragment.newInstance(film?.description ?: "No description available")
+        val additionalPageFilmFragment = AdditionalPageFilmFragment.newInstance(viewModel.film.value?.description ?: "No description available")
         parentFragmentManager.beginTransaction().replace(R.id.fragment_container, additionalPageFilmFragment)
             .addToBackStack(null).commit()
     }

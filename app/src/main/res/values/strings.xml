@@ -11,12 +11,19 @@
     <string name="home">Home</string>
     <string name="account">Account</string>
     <string name="favorite">Favorites</string>
+    <string name="description_for_additional_page">Description</string>
+    <string name="rating">Kinopoisk rating</string>
+    <string name="best_films">Best films</string>
+    <string name="remove_from_favorite">Delete</string>
+    <string name="share">Share</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="share_film">Share movie</string>
+    <string name="menu_for_favorites_description">Menu for favorites</string>
+    <string name="all_details">All details about the film</string>
     <string name="about_the_application">About the application</string>
     <string name="description">Welcome to Kinopoisk - an application for selecting films,
          created with love for cinema and technology! This is my pet project
           which combines convenience, modern design and powerful
            tools to find the perfect movie for the evening.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

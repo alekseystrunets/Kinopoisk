@@ -1,4 +1,3 @@
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,9 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentUserAccountBinding
-import com.example.kinopoisk.presentation.ui.fragment.FavoritesFragment
-import com.example.kinopoisk.presentation.ui.fragment.HomeFragment
-import com.example.kinopoisk.presentation.view_model.UserAccountViewModel
 
 class UserAccountFragment : Fragment() {
 
@@ -28,11 +24,11 @@ class UserAccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this).get(UserAccountViewModel::class.java)
 
-        // Получаем email из SharedPreferences
-        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val userEmail = sharedPreferences.getString("user_email", null)
+        // Получаем email из SharedPreferences через ViewModel
+        val userEmail = viewModel.getUserEmail()
         Log.d("UserAccountFragment", "Email retrieved from SharedPreferences: $userEmail")
 
         if (userEmail != null) {
@@ -42,6 +38,7 @@ class UserAccountFragment : Fragment() {
             binding.emailAccount.text = "Email не найден"
         }
 
+        // Подписываемся на данные пользователя
         viewModel.userData.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 binding.userAccountLogin.text = user.login
@@ -52,6 +49,7 @@ class UserAccountFragment : Fragment() {
             }
         }
 
+        // Обработчики нажатий на кнопки
         binding.buttonHome.setOnClickListener {
             toHomeScreen()
         }
@@ -61,6 +59,7 @@ class UserAccountFragment : Fragment() {
         }
     }
 
+    // Переход на HomeFragment
     private fun toHomeScreen() {
         val homeFragment = HomeFragment()
         parentFragmentManager.beginTransaction()
@@ -69,6 +68,7 @@ class UserAccountFragment : Fragment() {
             .commit()
     }
 
+    // Переход на FavoritesFragment
     private fun toFavoritesScreen() {
         val favoritesFragment = FavoritesFragment()
         parentFragmentManager.beginTransaction()

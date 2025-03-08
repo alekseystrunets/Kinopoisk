@@ -53,9 +53,10 @@
             android:soundEffectsEnabled="false"
             android:focusable="false"
             android:clickable="true"
-            app:layout_constraintEnd_toEndOf="@id/recycler_item"
-            app:layout_constraintTop_toTopOf="@id/recycler_item"
-            android:layout_margin="10dp"/>
+            android:contentDescription="@string/menu_for_favorites_description"
+        app:layout_constraintEnd_toEndOf="@id/recycler_item"
+        app:layout_constraintTop_toTopOf="@id/recycler_item"
+        android:layout_margin="10dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
