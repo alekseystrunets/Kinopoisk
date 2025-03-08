@@ -1,3 +1,5 @@
+package com.example.kinopoisk.presentation.viewmodel
+
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData

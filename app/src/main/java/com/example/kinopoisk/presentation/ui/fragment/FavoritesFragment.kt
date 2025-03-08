@@ -1,6 +1,5 @@
 package com.example.kinopoisk.presentation.fragments
 
-import FavoritesViewModel
 import HomeFragment
 import UserAccountFragment
 import android.content.Context
@@ -23,6 +22,7 @@ import com.example.kinopoisk.presentation.Rating
 import com.example.kinopoisk.presentation.Votes
 import com.example.kinopoisk.presentation.Country
 import com.example.kinopoisk.presentation.adapter.FavoritesFragmentAdapter
+import com.example.kinopoisk.presentation.viewmodel.FavoritesViewModel
 
 class FavoritesFragment : Fragment() {
 
@@ -96,6 +96,8 @@ class FavoritesFragment : Fragment() {
                                 // Удаление фильма из избранного
                                 if (userEmail != null) {
                                     viewModel.deleteFavorite(userEmail, favorite)
+                                    // Обновляем список в адаптере
+                                    adapter?.removeItem(adapter?.getPosition(favorite) ?: -1)
                                 }
                             }
                             R.id.action_share -> {
