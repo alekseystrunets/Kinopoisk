@@ -1,4 +1,4 @@
-package com.example.kinopoisk // Обновите пакет
+package com.example.kinopoisk
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

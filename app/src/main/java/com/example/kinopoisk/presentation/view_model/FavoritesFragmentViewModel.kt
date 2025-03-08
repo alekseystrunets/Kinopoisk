@@ -5,13 +5,19 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.kinopoisk.data.db.AppDatabase
 import com.example.kinopoisk.data.db.entity.Favorites
+import com.example.kinopoisk.data.db.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class FavoritesViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class FavoritesViewModel @Inject constructor(
+    application: Application,
+    private val userRepository: UserRepository // Внедряем UserRepository через конструктор
+) : AndroidViewModel(application) {
 
     // LiveData для списка избранных фильмов
     private val _favorites = MutableLiveData<List<Favorites>>()
@@ -21,13 +27,11 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> get() = _toastMessage
 
-    private val database = AppDatabase.getDatabase(application)
-
     // Загрузка избранных фильмов
     fun loadFavorites(userEmail: String) {
         viewModelScope.launch {
             val favoritesFromDb = withContext(Dispatchers.IO) {
-                database.userDao().getFavoritesForUser(userEmail)
+                userRepository.getFavoritesForUser(userEmail)
             }
             _favorites.postValue(favoritesFromDb)
         }
@@ -37,10 +41,7 @@ class FavoritesViewModel(application: Application) : AndroidViewModel(applicatio
     fun deleteFavorite(userEmail: String, favorite: Favorites) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                // Удаляем связь пользователя с фильмом
-                database.userDao().deleteUserFilm(userEmail, favorite.id)
-                // Удаляем фильм из таблицы избранных
-                database.userDao().deleteFavorite(favorite)
+                userRepository.deleteFavorite(userEmail, favorite)
             }
             // После удаления фильма загружаем обновленный список избранных
             loadFavorites(userEmail)

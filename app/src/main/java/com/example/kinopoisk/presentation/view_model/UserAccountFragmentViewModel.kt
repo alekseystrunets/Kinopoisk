@@ -1,17 +1,22 @@
+package com.example.kinopoisk.presentation.viewmodel
+
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.kinopoisk.data.db.AppDatabase
 import com.example.kinopoisk.data.db.entity.User
 import com.example.kinopoisk.data.db.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserAccountViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val userRepository = UserRepository(AppDatabase.getDatabase(application).userDao())
+@HiltViewModel
+class UserAccountViewModel @Inject constructor(
+    application: Application,
+    private val userRepository: UserRepository // Внедряем UserRepository через конструктор
+) : AndroidViewModel(application) {
 
     // LiveData для данных пользователя
     private val _userData = MutableLiveData<User?>()

@@ -4,8 +4,13 @@ import com.example.kinopoisk.data.db.dao.UserDao
 import com.example.kinopoisk.data.db.entity.Favorites
 import com.example.kinopoisk.data.db.entity.User
 import com.example.kinopoisk.data.db.entity.UserFilm
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserRepository(private val userDao: UserDao) {
+@Singleton
+class UserRepository @Inject constructor(
+    private val userDao: UserDao
+) {
 
     // Методы для пользователей
     suspend fun registerUser(email: String, login: String, password: String): Boolean {

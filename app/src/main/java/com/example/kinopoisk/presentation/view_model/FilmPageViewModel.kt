@@ -10,12 +10,19 @@ import androidx.lifecycle.viewModelScope
 import com.example.kinopoisk.data.db.AppDatabase
 import com.example.kinopoisk.data.db.entity.Favorites
 import com.example.kinopoisk.data.db.entity.UserFilm
+import com.example.kinopoisk.data.db.repository.UserRepository
 import com.example.kinopoisk.presentation.Film
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class FilmPageViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class FilmPageViewModel @Inject constructor(
+    application: Application,
+    private val userRepository: UserRepository // Внедряем UserRepository через конструктор
+) : AndroidViewModel(application) {
 
     // LiveData для данных о фильме
     private val _film = MutableLiveData<Film?>()
@@ -65,15 +72,7 @@ class FilmPageViewModel(application: Application) : AndroidViewModel(application
                 // Сохраняем фильм в базу данных
                 try {
                     withContext(Dispatchers.IO) {
-                        val database = AppDatabase.getDatabase(context)
-                        database.userDao().insertFavorite(favorite)
-
-                        // Создаем связь между пользователем и фильмом
-                        val userFilm = UserFilm(
-                            userEmail = userEmail,
-                            filmId = favorite.id
-                        )
-                        database.userDao().insertUserFilm(userFilm)
+                        userRepository.addFavoriteToUser(userEmail, favorite)
                     }
 
                     _toastMessage.postValue("Movie added to favorites")

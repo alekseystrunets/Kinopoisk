@@ -1,20 +1,27 @@
+package com.example.kinopoisk.presentation.ui.fragment
+
+import HomeFragment
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentAdditionalPageFilmBinding
 import com.example.kinopoisk.presentation.fragments.FavoritesFragment
+import com.example.kinopoisk.presentation.fragments.UserAccountFragment
 import com.example.kinopoisk.presentation.view_model.AdditionalPageFilmViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AdditionalPageFilmFragment : Fragment() {
 
     private var _binding: FragmentAdditionalPageFilmBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: AdditionalPageFilmViewModel
+    // Используем Hilt для внедрения ViewModel
+    private val viewModel: AdditionalPageFilmViewModel by viewModels()
 
     companion object {
         private const val ARG_DESCRIPTION = "description"
@@ -39,7 +46,6 @@ class AdditionalPageFilmFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AdditionalPageFilmViewModel::class.java)
 
         // Устанавливаем описание в ViewModel
         val description = arguments?.getString(ARG_DESCRIPTION) ?: "No description available"

@@ -1,7 +1,6 @@
 package com.example.kinopoisk.presentation.fragments
 
 import HomeFragment
-import UserAccountFragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kinopoisk.R
@@ -22,13 +21,18 @@ import com.example.kinopoisk.presentation.Rating
 import com.example.kinopoisk.presentation.Votes
 import com.example.kinopoisk.presentation.Country
 import com.example.kinopoisk.presentation.adapter.FavoritesFragmentAdapter
+import com.example.kinopoisk.presentation.ui.fragment.FilmPageFragment
 import com.example.kinopoisk.presentation.viewmodel.FavoritesViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: FavoritesViewModel
+
+    // Используем Hilt для внедрения ViewModel
+    private val viewModel: FavoritesViewModel by viewModels()
 
     private var recyclerView: RecyclerView? = null
     private var adapter: FavoritesFragmentAdapter? = null
@@ -43,8 +47,6 @@ class FavoritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
 
         // Инициализация RecyclerView
         recyclerView = binding.recyclerView
@@ -151,14 +153,18 @@ class FavoritesFragment : Fragment() {
 
     private fun toHomeScreen() {
         val homeScreen = HomeFragment()
-        parentFragmentManager.beginTransaction().replace(R.id.fragment_container, homeScreen)
-            .addToBackStack(null).commit()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, homeScreen)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun toAccountScreen() {
         val accountFragment = UserAccountFragment()
-        parentFragmentManager.beginTransaction().replace(R.id.fragment_container, accountFragment)
-            .addToBackStack(null).commit()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, accountFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onDestroyView() {

@@ -1,3 +1,6 @@
+package com.example.kinopoisk.presentation.ui.fragment
+
+import HomeFragment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,13 +13,16 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.kinopoisk.R
 import com.example.kinopoisk.databinding.FragmentFilmPageBinding
 import com.example.kinopoisk.presentation.Film
 import com.example.kinopoisk.presentation.fragments.FavoritesFragment
+import com.example.kinopoisk.presentation.fragments.UserAccountFragment
+import com.example.kinopoisk.presentation.ui.fragment.AdditionalPageFilmFragment
 import com.example.kinopoisk.presentation.viewmodel.FilmPageViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,11 +30,14 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
+@AndroidEntryPoint
 class FilmPageFragment : Fragment() {
 
     private var _binding: FragmentFilmPageBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: FilmPageViewModel
+
+    // Используем Hilt для внедрения ViewModel
+    private val viewModel: FilmPageViewModel by viewModels()
 
     companion object {
         private const val ARG_FILM = "film"
@@ -49,7 +58,6 @@ class FilmPageFragment : Fragment() {
         // Получаем данные о фильме из аргументов
         arguments?.let {
             val film = it.getParcelable<Film>(ARG_FILM)
-            viewModel = ViewModelProvider(this).get(FilmPageViewModel::class.java)
             film?.let { viewModel.setFilm(it) }
         }
     }

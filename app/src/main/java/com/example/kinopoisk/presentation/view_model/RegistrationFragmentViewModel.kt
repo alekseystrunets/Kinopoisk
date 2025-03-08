@@ -1,3 +1,5 @@
+package com.example.kinopoisk.presentation.view_model
+
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
@@ -6,12 +8,17 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.kinopoisk.data.db.AppDatabase
 import com.example.kinopoisk.data.db.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
+import javax.inject.Inject
 
-class RegistrationFragmentViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class RegistrationFragmentViewModel @Inject constructor(
+    application: Application,
+    private val userRepository: UserRepository // Внедряем UserRepository через конструктор
+) : AndroidViewModel(application) {
 
     // LiveData для ошибок валидации
     private val _liveDataForFields = MutableLiveData<Bundle?>()
@@ -20,10 +27,6 @@ class RegistrationFragmentViewModel(application: Application) : AndroidViewModel
     // LiveData для сообщений Toast
     private val _toastMessage = MutableLiveData<String?>()
     val toastMessage: LiveData<String?> get() = _toastMessage
-
-    private val database = AppDatabase.getDatabase(application)
-    private val userDao = database.userDao()
-    private val userRepository = UserRepository(userDao)
 
     private val EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$")
     private val LOGIN_PATTERN = Pattern.compile("^[A-Za-z0-9_]{3,20}\$")

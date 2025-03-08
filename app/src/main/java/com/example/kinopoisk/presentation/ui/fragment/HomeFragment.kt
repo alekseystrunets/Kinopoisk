@@ -11,7 +11,9 @@ import com.example.kinopoisk.databinding.FragmentHomeBinding
 import com.example.kinopoisk.presentation.Film
 import com.example.kinopoisk.presentation.adapter.CategoriesAdapter
 import com.example.kinopoisk.presentation.fragments.FavoritesFragment
+import com.example.kinopoisk.presentation.fragments.UserAccountFragment
 import com.example.kinopoisk.presentation.interfaices.OnFilmClickListener
+import com.example.kinopoisk.presentation.ui.fragment.FilmPageFragment
 
 class HomeFragment : Fragment(), OnFilmClickListener {
 
