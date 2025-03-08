@@ -1,43 +1,39 @@
 # Kinopoisk App
 
-Этот проект представляет собой мобильное приложение для поиска и просмотра информации о фильмах с использованием API сервиса Kinopoisk. Приложение разработано как пет-проект для демонстрации навыков работы с Android-разработкой, Retrofit, Hilt и современными подходами к созданию приложений.
+This project is a mobile application for searching and viewing information about films using the Kinopoisk service API. The application is developed as a pet project to demonstrate skills in working with Android development, Retrofit, Hilt and modern approaches to creating applications.
 
 ---
 
-## Описание приложения
+## Application Description
 
-Приложение позволяет:
+The application allows you to:
 
-- Просматривать список фильмов по различным категориям (например, "Лучшие фильмы", "Новинки", "Боевики" и т.д.).
-- Переходить на страницу фильма для получения подробной информации.
-- Отображает фильмы по различным параметрам (год выпуска, жанр, рейтинг и т.д.).
-- Сохранять понравившиеся фильмы в избранное (если реализовано).
+- View a list of movies by different categories (e.g. "Best Movies", "New Releases", "Action Movies", etc.).
+- Go to the movie page for detailed information.
+- Displays movies by different parameters (release year, genre, rating, etc.).
+- Save your favorite movies to your favorites (if implemented).
 
 ---
 
-## Требования для запуска
+## Startup Requirements
 
-Для запуска проекта необходимо:
+To start the project you need:
 
-1. Зарегистрироваться на сайте [Kinopoisk.dev](https://kinopoisk.dev/) и получить API-токен.
-2. Вставить полученный токен в поле `apiKey` в классе `HomeViewModel`:
+1. Register on the website [Kinopoisk.dev](https://kinopoisk.dev/) and get an API token.
+2. Insert the received token into the `apiKey` field in the `HomeViewModel` class:
    ```kotlin
-   private val apiKey = "ВАШ_API_ТОКЕН"
+   private val apiKey = "YOUR_API_KEY"
    
- ## Технологии и инструменты
+ ## Technologies and tools
 
-- **Язык программирования**: Kotlin
-- **Архитектура**: MVVM (Model-View-ViewModel)
-- **Сетевые запросы**: Retrofit
-- **Внедрение зависимостей**: Hilt
-- **UI**:  XML
-- **Локальная база данных**: Room 
-- **Асинхронность**: Kotlin Coroutines
+- **Programming Language**: Kotlin
+- **Architecture**: MVVM (Model-View-ViewModel)
+- **Network Requests**: Retrofit
+- **Dependency Injection**: Hilt
+- **UI**: XML
+- **Local Database**: Room
+- **Async**: Kotlin Coroutines
+- **Local Storage**: SharedPreferences
+- **Displaying Lists**: RecyclerView
 
----
 
-## Как запустить проект
-
-1. Клонируйте репозиторий:
-   ```bash
-   git clone https://github.com/ваш-username/kinopoisk-app.git
