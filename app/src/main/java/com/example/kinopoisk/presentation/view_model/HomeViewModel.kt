@@ -36,7 +36,7 @@ class HomeViewModel : ViewModel() {
                         apiKey,
                         rating = "7-10",
                         countries = "Россия,США,Франция,Великобритания",
-                        limit = 3,
+                        limit =10,
                         page = 1
                     )
                 }
@@ -44,35 +44,35 @@ class HomeViewModel : ViewModel() {
                     RetrofitClient.api.getMovies(
                         apiKey,
                         year = currentYear,
-                        limit = 3
+                        limit = 10
                     )
                 }
                 val actionMoviesDeferred = async {
                     RetrofitClient.api.getMovies(
                         apiKey,
                         genre = "боевик",
-                        limit = 3
+                        limit = 10
                     )
                 }
                 val thrillersDeferred = async {
                     RetrofitClient.api.getMovies(
                         apiKey,
                         genre = "триллер",
-                        limit = 3
+                        limit = 10
                     )
                 }
                 val horrorsDeferred = async {
                     RetrofitClient.api.getMovies(
                         apiKey,
                         genre = "ужасы",
-                        limit = 3
+                        limit = 10
                     )
                 }
                 val topMoviesDeferred = async {
                     RetrofitClient.api.getMovies(
                         apiKey,
                         rating = "6-10",
-                        limit = 3
+                        limit = 5
                     )
                 }
 
@@ -83,18 +83,18 @@ class HomeViewModel : ViewModel() {
                 val horrorsResponse = horrorsDeferred.await()
                 val topMoviesResponse = topMoviesDeferred.await()
 
-                processResponse(topRatedResponse, "Лучшие фильмы", categories)
-                processResponse(newMoviesResponse, "Новинки", categories)
-                processResponse(actionMoviesResponse, "Боевики", categories)
-                processResponse(thrillersResponse, "Триллеры", categories)
-                processResponse(horrorsResponse, "Хорроры", categories)
-                processResponse(topMoviesResponse, "Топ фильмы", categories)
+                processResponse(topRatedResponse, "Best films", categories)
+                processResponse(newMoviesResponse, "New movies", categories)
+                processResponse(actionMoviesResponse, "Action", categories)
+                processResponse(thrillersResponse, "Thrillers", categories)
+                processResponse(horrorsResponse, "Horror", categories)
+                processResponse(topMoviesResponse, "Top movies", categories)
 
                 withContext(Dispatchers.Main) {
                     _categories.value = categories
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "Ошибка при загрузке данных: ${e.message}"
+                _errorMessage.value = "Error loading data: ${e.message}"
             }
         }
     }

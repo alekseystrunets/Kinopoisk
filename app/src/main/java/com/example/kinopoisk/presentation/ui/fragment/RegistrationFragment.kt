@@ -19,7 +19,6 @@ class RegistrationFragment : Fragment() {
     private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!
 
-    // Используем Hilt для внедрения ViewModel
     private val viewModel: RegistrationFragmentViewModel by viewModels()
 
     override fun onCreateView(

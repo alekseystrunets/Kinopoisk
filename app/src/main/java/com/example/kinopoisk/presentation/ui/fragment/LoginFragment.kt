@@ -19,7 +19,6 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    // Используем Hilt для внедрения ViewModel
     private val viewModel: LoginFragmentViewModel by viewModels()
 
     override fun onCreateView(

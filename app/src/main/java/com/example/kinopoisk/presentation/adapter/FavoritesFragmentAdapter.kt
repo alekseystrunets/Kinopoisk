@@ -14,9 +14,9 @@ import com.example.kinopoisk.R
 import com.example.kinopoisk.data.db.entity.Favorites
 
 class FavoritesFragmentAdapter(
-    private var favorites: List<Favorites>, // Изменили на var
-    private val onItemClick: (Favorites) -> Unit, // Обработчик клика на элемент
-    private val onMenuItemClick: (Favorites, Int) -> Unit // Обработчик клика на пункт меню
+    private var favorites: List<Favorites>,
+    private val onItemClick: (Favorites) -> Unit,
+    private val onMenuItemClick: (Favorites, Int) -> Unit
 ) : RecyclerView.Adapter<FavoritesFragmentAdapter.FavoritesViewHolder>() {
 
     inner class FavoritesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

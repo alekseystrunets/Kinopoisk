@@ -20,7 +20,6 @@ class UserAccountFragment : Fragment() {
     private var _binding: FragmentUserAccountBinding? = null
     private val binding get() = _binding!!
 
-    // Используем Hilt для внедрения ViewModel
     private val viewModel: UserAccountViewModel by viewModels()
 
     override fun onCreateView(
