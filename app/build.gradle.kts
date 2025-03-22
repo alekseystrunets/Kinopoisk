@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,15 +8,24 @@ plugins {
     id ("com.google.dagger.hilt.android")
 }
 
+// Загрузка local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 android {
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     namespace = "com.example.kinopoisk"
     compileSdk = 35
 
     defaultConfig {
+        buildConfigField("String", "KINOPOISK_API_KEY", "\"${localProperties.getProperty("KINOPOISK_API_KEY", "")}\"")
         applicationId = "com.example.kinopoisk"
         minSdk = 34
         targetSdk = 34

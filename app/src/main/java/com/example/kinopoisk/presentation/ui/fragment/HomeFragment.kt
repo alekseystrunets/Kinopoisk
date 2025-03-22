@@ -36,10 +36,10 @@ class HomeFragment : Fragment(), OnFilmClickListener {
 
         // Настройка RecyclerView
         binding.firstRecycleView.layoutManager = LinearLayoutManager(context)
-        val adapter = CategoriesAdapter(mutableListOf(), this@HomeFragment)
+        val adapter = CategoriesAdapter(mutableMapOf(), this@HomeFragment) // Используем Map
         binding.firstRecycleView.adapter = adapter
 
-        // Подписываемся на данные
+// Подписываемся на данные
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
             adapter.updateData(categories)
             Log.d("HomeFragment", "Адаптер обновлён с ${categories.size} категориями")
